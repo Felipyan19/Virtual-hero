@@ -3,19 +3,47 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { initDatabase } from '@/db/client';
 import { requestNotificationPermissions } from '@/lib/notifications';
 import { SplashScreen } from '@/components/SplashScreen';
+import { useAuth } from '@/store/useAuth';
+import { useFonts } from 'expo-font';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const queryClient = new QueryClient();
+
+function NavigationHandler({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const segments = useSegments();
+
+  useEffect(() => {
+    const inAuthGroup = segments[0] === '(tabs)';
+
+    if (!isAuthenticated && inAuthGroup) {
+      // Si no está autenticado y está en tabs, redirigir a login
+      router.replace('/login');
+    } else if (isAuthenticated && segments[0] === 'login') {
+      // Si está autenticado y está en login, redirigir a tabs
+      router.replace('/(tabs)');
+    }
+  }, [isAuthenticated, segments]);
+
+  return <>{children}</>;
+}
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
+  const [fontsLoaded] = useFonts({
+    ...Ionicons.font,
+    ...MaterialCommunityIcons.font,
+  });
 
   useEffect(() => {
     // Inicializar DB y permisos
@@ -43,7 +71,7 @@ export default function RootLayout() {
     init();
   }, []);
 
-  if (showSplash) {
+  if (!isReady || !fontsLoaded || showSplash) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
@@ -51,10 +79,13 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <StatusBar style="dark" />
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-        </Stack>
+        <NavigationHandler>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+          </Stack>
+        </NavigationHandler>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );

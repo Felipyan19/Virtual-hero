@@ -6,7 +6,7 @@
 // import * as SQLite from 'expo-sqlite';
 type SQLiteDatabase = any;
 
-const DB_NAME = 'virtual_giro.db';
+const DB_NAME = 'virtual_hero.db';
 
 let db: SQLiteDatabase | null = null;
 
@@ -22,6 +22,20 @@ export const initDatabase = async (): Promise<void> => {
 
     // Crear tablas
     await db.execAsync(`
+      -- Tabla de usuarios
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        display_name TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        last_login TEXT
+      );
+
+      -- Insertar usuario de prueba
+      INSERT OR IGNORE INTO users (id, username, password, display_name)
+      VALUES (1, 'hero', 'hero123', 'Héroe Virtual');
+
       -- Tabla de logs diarios
       CREATE TABLE IF NOT EXISTS daily_logs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -385,5 +399,100 @@ export const cleanOldData = async (daysToKeep: number = 90): Promise<void> => {
     console.log('[DB] Datos antiguos limpiados');
   } catch (error) {
     console.error('[DB] Error al limpiar datos:', error);
+  }
+};
+
+// ============================================
+// USERS & AUTH
+// ============================================
+
+export interface User {
+  id: number;
+  username: string;
+  password: string;
+  display_name?: string;
+  created_at?: string;
+  last_login?: string;
+}
+
+/**
+ * Autenticar usuario
+ * TEMPORAL: Usando autenticación en memoria mientras SQLite está deshabilitado
+ */
+export const authenticateUser = async (
+  username: string,
+  password: string
+): Promise<User | null> => {
+  try {
+    // TEMPORAL: Usuario hardcodeado mientras SQLite está deshabilitado
+    if (username === 'hero' && password === 'hero123') {
+      const user: User = {
+        id: 1,
+        username: 'hero',
+        password: '',
+        display_name: 'Héroe Virtual',
+        created_at: new Date().toISOString(),
+        last_login: new Date().toISOString(),
+      };
+      console.log('[DB] Usuario autenticado (modo memoria):', user.username);
+      return user;
+    }
+
+    // Cuando SQLite esté habilitado, descomentar esto:
+    /*
+    const database = getDB();
+    const user = await database.getFirstAsync<User>(
+      'SELECT * FROM users WHERE username = ? AND password = ?',
+      [username, password]
+    );
+
+    if (user) {
+      // Actualizar último login
+      await database.runAsync('UPDATE users SET last_login = ? WHERE id = ?', [
+        new Date().toISOString(),
+        user.id,
+      ]);
+      console.log('[DB] Usuario autenticado:', user.username);
+      return user;
+    }
+    */
+
+    return null;
+  } catch (error) {
+    console.error('[DB] Error al autenticar usuario:', error);
+    return null;
+  }
+};
+
+/**
+ * Obtener usuario por ID
+ * TEMPORAL: Usando autenticación en memoria mientras SQLite está deshabilitado
+ */
+export const getUserById = async (id: number): Promise<User | null> => {
+  try {
+    // TEMPORAL: Usuario hardcodeado mientras SQLite está deshabilitado
+    if (id === 1) {
+      const user: User = {
+        id: 1,
+        username: 'hero',
+        password: '',
+        display_name: 'Héroe Virtual',
+        created_at: new Date().toISOString(),
+        last_login: new Date().toISOString(),
+      };
+      return user;
+    }
+
+    // Cuando SQLite esté habilitado, descomentar esto:
+    /*
+    const database = getDB();
+    const user = await database.getFirstAsync<User>('SELECT * FROM users WHERE id = ?', [id]);
+    return user || null;
+    */
+
+    return null;
+  } catch (error) {
+    console.error('[DB] Error al obtener usuario:', error);
+    return null;
   }
 };

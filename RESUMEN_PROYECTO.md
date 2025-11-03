@@ -1,10 +1,10 @@
-# 🦸 Virtual Giro - Resumen del Proyecto
+# 🦸 Virtual Hero - Resumen del Proyecto
 
 ## 📋 Información General
 
 | Propiedad            | Valor                                       |
 | -------------------- | ------------------------------------------- |
-| **Nombre**           | Virtual Giro                                |
+| **Nombre**           | Virtual Hero                                |
 | **Tipo**             | App móvil iOS/Android de fitness gamificada |
 | **Framework**        | React Native + Expo 50                      |
 | **Lenguaje**         | TypeScript                                  |

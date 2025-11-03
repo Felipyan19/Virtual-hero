@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.paper,
   },
   filterButtonActive: {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: '#06B6D4',
   },
   filterText: {
     ...theme.typography.caption,

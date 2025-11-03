@@ -120,7 +120,7 @@ export const useHydration = create<HydrationState>()(
       },
     }),
     {
-      name: 'virtual-giro-hydration',
+      name: 'virtual-hero-hydration',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

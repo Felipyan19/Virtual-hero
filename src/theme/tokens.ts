@@ -1,5 +1,5 @@
 /**
- * Design Tokens - Virtual Giro
+ * Design Tokens - Virtual Hero
  * Paleta de colores y constantes de diseño con estética cómic/superhéroes
  */
 
@@ -17,8 +17,8 @@ export const colors = {
   ink: '#F9FAFB', // Texto claro
   border: '#3D3555', // Contornos sutiles
 
-  // Gradientes héroe
-  gradientHero: ['#6D28D9', '#8B5CF6', '#3B82F6'],
+  // Gradientes héroe (ajustados para mejor contraste)
+  gradientHero: ['#7C3AED', '#9333EA', '#A855F7'],
   gradientDanger: ['#EF4444', '#F97316'],
   gradientSuccess: ['#10B981', '#14B8A6'],
 
@@ -41,8 +41,8 @@ export const colors = {
   gray900: '#1E293B',
 
   // Colores específicos para componentes
-  cyan: '#06B6D4', // Para el gauge de pasos
-  cyanDark: '#0891B2',
+  cyan: '#22D3EE', // Para el gauge de pasos (más brillante para mejor visibilidad)
+  cyanDark: '#06B6D4',
   yellow: '#FCD34D', // Para streak
   yellowDark: '#F59E0B',
 

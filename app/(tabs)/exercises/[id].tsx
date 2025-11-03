@@ -114,12 +114,8 @@ export default function ExerciseDetailScreen() {
             />
           </PanelCard>
         ) : (
-          <TouchableOpacity
-            style={[theme.buttons.success, styles.startButton]}
-            onPress={handleStart}
-            activeOpacity={0.8}
-          >
-            <Text style={theme.buttons.textPrimary}>🎯 Iniciar Misión</Text>
+          <TouchableOpacity style={[styles.startButton]} onPress={handleStart} activeOpacity={0.8}>
+            <Text style={styles.startButtonText}>🎯 Iniciar Misión</Text>
           </TouchableOpacity>
         )}
 
@@ -193,6 +189,18 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   startButton: {
+    backgroundColor: '#06B6D4',
+    borderRadius: theme.borderRadius.md,
+    borderWidth: theme.borderWidth.medium,
+    borderColor: theme.colors.border,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
     ...theme.shadows.lg,
+  },
+  startButtonText: {
+    color: theme.colors.ink,
+    ...theme.typography.button,
   },
 });

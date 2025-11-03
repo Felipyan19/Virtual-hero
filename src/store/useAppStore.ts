@@ -277,7 +277,7 @@ export const useAppStore = create<AppState>()(
       },
     }),
     {
-      name: 'virtual-giro-app',
+      name: 'virtual-hero-app',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

@@ -1,5 +1,5 @@
 /**
- * Theme System - Virtual Giro
+ * Theme System - Virtual Hero
  * Utilidades y estilos componibles para el sistema de diseño cómic
  */
 
@@ -72,7 +72,7 @@ export const speechBubble = StyleSheet.create({
  */
 export const buttons = StyleSheet.create({
   primary: {
-    backgroundColor: colors.primary,
+    backgroundColor: '#06B6D4',
     borderRadius: borderRadius.md,
     borderWidth: borderWidth.medium,
     borderColor: colors.border,

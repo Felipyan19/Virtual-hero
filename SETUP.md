@@ -1,4 +1,4 @@
-# 🚀 Setup Rápido - Virtual Giro
+# 🚀 Setup Rápido - Virtual Hero
 
 Guía paso a paso para poner en marcha el proyecto.
 
@@ -148,11 +148,11 @@ Si todo funciona: **¡Proyecto listo! 🎉**
 
 ### iOS HealthKit
 
-1. Abrir `ios/VirtualGiro.xcworkspace` en Xcode
-2. Seleccionar el target VirtualGiro
+1. Abrir `ios/VirtualHero.xcworkspace` en Xcode
+2. Seleccionar el target VirtualHero
 3. Ir a "Signing & Capabilities"
 4. Agregar capability: **HealthKit**
-5. Verificar que `VirtualGiro.entitlements` se creó
+5. Verificar que `VirtualHero.entitlements` se creó
 
 ### Android Google Fit
 

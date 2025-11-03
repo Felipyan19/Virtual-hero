@@ -1,4 +1,4 @@
-# 📂 Estructura del Proyecto Virtual Giro
+# 📂 Estructura del Proyecto Virtual Hero
 
 ## Árbol Completo de Archivos
 

@@ -23,8 +23,8 @@ export const StreakBillboard: React.FC<StreakBillboardProps> = ({ streakCount, l
           <Text style={styles.flame}>🔥</Text>
 
           <View style={styles.info}>
-            <Text style={styles.label}>STREAK</Text>
-            <Text style={styles.count}>{streakCount} DAYS</Text>
+            <Text style={styles.label}>RACHA</Text>
+            <Text style={styles.count}>{streakCount} DÍAS</Text>
           </View>
         </View>
       </View>

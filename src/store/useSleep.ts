@@ -139,7 +139,7 @@ export const useSleep = create<SleepState>()(
       },
     }),
     {
-      name: 'virtual-giro-sleep',
+      name: 'virtual-hero-sleep',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

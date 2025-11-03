@@ -1,4 +1,4 @@
-# 🦸 Virtual Giro - App de Fitness Gamificada
+# 🦸 Virtual Hero - App de Fitness Gamificada
 
 App móvil de fitness gamificada con estética de cómic y superhéroes. Convierte tu rutina diaria en una aventura épica.
 
@@ -136,7 +136,7 @@ Ya configurado en `app.json` con:
 
 Al ejecutar `prebuild`, Expo generará automáticamente:
 
-- `ios/VirtualGiro/VirtualGiro.entitlements`
+- `ios/VirtualHero/VirtualHero.entitlements`
 - Permisos en `Info.plist`
 
 ### 5. Assets Necesarios
@@ -390,7 +390,7 @@ npx expo install expo-linear-gradient
 
 1. Verificar que `app.json` tenga el entitlement configurado
 2. Ejecutar `npm run prebuild:clean`
-3. Abrir `ios/VirtualGiro.xcworkspace` en Xcode
+3. Abrir `ios/VirtualHero.xcworkspace` en Xcode
 4. Verificar que HealthKit esté habilitado en Capabilities
 
 ### Error en Android: "Google Fit not authorized"

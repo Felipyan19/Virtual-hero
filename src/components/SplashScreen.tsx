@@ -63,8 +63,8 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
         <View style={styles.content}>
           {/* Logo y texto */}
           <Animated.View style={[styles.logoContainer, { transform: [{ scale: pulseAnim }] }]}>
-            <Text style={styles.title}>Virtual Giro</Text>
-            <Text style={styles.subtitle}>Unleash Your Inner Hero</Text>
+            <Text style={styles.title}>Virtual Hero</Text>
+            <Text style={styles.subtitle}>Desata tu Héroe Interior</Text>
           </Animated.View>
 
           {/* Barra de progreso */}

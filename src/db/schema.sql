@@ -1,5 +1,19 @@
--- Virtual Giro Database Schema
+-- Virtual Hero Database Schema
 -- Registros diarios de actividad y progreso
+
+-- Tabla de usuarios
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  display_name TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  last_login TEXT
+);
+
+-- Insertar usuario de prueba (password: hero123)
+INSERT OR IGNORE INTO users (id, username, password, display_name)
+VALUES (1, 'hero', 'hero123', 'Héroe Virtual');
 
 -- Tabla de logs diarios
 CREATE TABLE IF NOT EXISTS daily_logs (

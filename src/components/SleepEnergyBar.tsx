@@ -28,7 +28,7 @@ export const SleepEnergyBar: React.FC<SleepEnergyBarProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.label}>SLEEP</Text>
+        <Text style={styles.label}>SUEÑO</Text>
       </View>
 
       {/* Barra de energía con gradiente */}
@@ -48,7 +48,7 @@ export const SleepEnergyBar: React.FC<SleepEnergyBarProps> = ({
 
         {bedTime && wakeTime && (
           <Text style={styles.schedule}>
-            Bedtime: {bedTime} - Wake up: {wakeTime}
+            Dormir: {bedTime} - Despertar: {wakeTime}
           </Text>
         )}
       </View>

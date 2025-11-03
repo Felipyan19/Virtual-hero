@@ -134,7 +134,7 @@ export const useSteps = create<StepsState>()(
       },
     }),
     {
-      name: 'virtual-giro-steps',
+      name: 'virtual-hero-steps',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

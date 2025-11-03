@@ -3,17 +3,20 @@
  */
 
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Switch } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Switch, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import theme from '@/theme/theme';
 import { useAppStore } from '@/store/useAppStore';
 import { useSteps } from '@/store/useSteps';
 import { useHydration } from '@/store/useHydration';
 import { useSleep } from '@/store/useSleep';
+import { useAuth } from '@/store/useAuth';
 import { PanelCard } from '@/components/PanelCard';
 import { BadgeSticker } from '@/components/BadgeSticker';
 import { getLevelTitle } from '@/lib/xp';
 
 export default function ProfileScreen() {
+  const router = useRouter();
   const {
     userName,
     level,
@@ -29,8 +32,26 @@ export default function ProfileScreen() {
   const { dailyGoalSteps } = useSteps();
   const { dailyGoalML, reminderEnabled, toggleReminder } = useHydration();
   const { targetSleepMinutes } = useSleep();
+  const { logout, user } = useAuth();
 
   const levelTitle = getLevelTitle(level);
+
+  const handleLogout = () => {
+    Alert.alert('Cerrar Sesión', '¿Estás seguro que deseas cerrar sesión?', [
+      {
+        text: 'Cancelar',
+        style: 'cancel',
+      },
+      {
+        text: 'Cerrar Sesión',
+        style: 'destructive',
+        onPress: () => {
+          logout();
+          router.replace('/login');
+        },
+      },
+    ]);
+  };
 
   return (
     <View style={theme.layout.container}>
@@ -77,7 +98,7 @@ export default function ProfileScreen() {
         </PanelCard>
 
         {/* Metas configuradas */}
-        <PanelCard>
+        <PanelCard style={styles.card}>
           <Text style={theme.text.h3}>🎯 Metas Diarias</Text>
 
           <View style={styles.goalsList}>
@@ -103,7 +124,7 @@ export default function ProfileScreen() {
         </PanelCard>
 
         {/* Configuración */}
-        <PanelCard>
+        <PanelCard style={styles.card}>
           <Text style={theme.text.h3}>⚙️ Configuración</Text>
 
           <View style={styles.settingsList}>
@@ -117,7 +138,7 @@ export default function ProfileScreen() {
                 onValueChange={toggleNotifications}
                 trackColor={{
                   false: theme.colors.gray300,
-                  true: theme.colors.primary,
+                  true: '#06B6D4',
                 }}
               />
             </View>
@@ -132,7 +153,7 @@ export default function ProfileScreen() {
                 onValueChange={toggleReminder}
                 trackColor={{
                   false: theme.colors.gray300,
-                  true: theme.colors.accent,
+                  true: '#06B6D4',
                 }}
               />
             </View>
@@ -147,16 +168,34 @@ export default function ProfileScreen() {
                 onValueChange={toggleSound}
                 trackColor={{
                   false: theme.colors.gray300,
-                  true: theme.colors.secondary,
+                  true: '#06B6D4',
                 }}
               />
             </View>
           </View>
         </PanelCard>
 
+        {/* Sesión */}
+        <PanelCard style={styles.card}>
+          <Text style={theme.text.h3}>👤 Sesión</Text>
+
+          <View style={styles.sessionInfo}>
+            <View>
+              <Text style={theme.text.body}>Usuario conectado</Text>
+              <Text style={[theme.text.caption, theme.text.muted]}>
+                {user?.display_name || user?.username || 'Héroe'}
+              </Text>
+            </View>
+          </View>
+
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutButtonText}>🚪 Cerrar Sesión</Text>
+          </TouchableOpacity>
+        </PanelCard>
+
         {/* Información */}
         <View style={styles.footer}>
-          <Text style={[theme.text.caption, theme.text.center]}>Virtual Giro v1.0.0</Text>
+          <Text style={[theme.text.caption, theme.text.center]}>Virtual Hero v1.0.0</Text>
           <Text style={[theme.text.caption, theme.text.center, theme.text.muted]}>
             ¡Sigue entrenando, héroe! 💪
           </Text>
@@ -179,7 +218,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: theme.spacing.md,
-    gap: theme.spacing.md,
+    paddingBottom: theme.spacing.xl * 2,
+  },
+  card: {
+    marginTop: theme.spacing.md,
   },
   profileHeader: {
     flexDirection: 'row',
@@ -247,5 +289,24 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: theme.spacing.xl,
     gap: theme.spacing.xs,
+  },
+  sessionInfo: {
+    marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+  },
+  logoutButton: {
+    backgroundColor: '#EF4444',
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing.md,
+    alignItems: 'center',
+    borderWidth: theme.borderWidth.thick,
+    borderColor: theme.colors.border,
+    ...theme.shadows.md,
+  },
+  logoutButtonText: {
+    ...theme.typography.body,
+    fontWeight: '800',
+    color: theme.colors.paper,
   },
 });

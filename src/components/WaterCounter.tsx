@@ -40,20 +40,20 @@ export const WaterCounter: React.FC<WaterCounterProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.label}>WATER</Text>
+        <Text style={styles.label}>AGUA</Text>
         <Text style={styles.icon}>💧</Text>
       </View>
 
       <View style={styles.stats}>
         <Text style={styles.count}>{cupsConsumed}</Text>
-        <Text style={styles.goal}>/ {Math.ceil(goalML / cupSize)} Glasses</Text>
+        <Text style={styles.goal}>/ {Math.ceil(goalML / cupSize)} Vasos</Text>
       </View>
 
       {/* Botón para agregar vaso */}
       <Animated.View style={animatedStyle}>
         <TouchableOpacity style={styles.button} onPress={handlePress} activeOpacity={0.8}>
           <Text style={styles.buttonIcon}>💧</Text>
-          <Text style={styles.buttonText}>Add Glass</Text>
+          <Text style={styles.buttonText}>Agregar Vaso</Text>
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -64,6 +64,8 @@ const styles = StyleSheet.create({
   container: {
     gap: theme.spacing.md,
     alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 200,
   },
   header: {
     flexDirection: 'row',
@@ -88,6 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: '900',
     color: theme.colors.info,
+    paddingVertical: theme.spacing.sm,
   },
   goal: {
     ...theme.typography.caption,
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing.xs,
-    backgroundColor: theme.colors.info,
+    backgroundColor: '#06B6D4',
     paddingVertical: theme.spacing.xs,
     paddingHorizontal: theme.spacing.md,
     borderRadius: theme.borderRadius.sm,

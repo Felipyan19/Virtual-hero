@@ -67,7 +67,8 @@ export default function HomeScreen() {
     <View style={theme.layout.container}>
       {/* Header con gradiente */}
       <LinearGradient
-        colors={theme.colors.gradientHero}
+        colors={['#1E3A8A', '#3B82F6', '#7C3AED']}
+        locations={[0, 0.5, 1]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.header}
@@ -75,9 +76,7 @@ export default function HomeScreen() {
         <View style={styles.headerContent}>
           <View>
             <Text style={[theme.text.h1, styles.headerText]}>{userName || '¡Hola, Héroe!'}</Text>
-            <Text style={[theme.text.body, styles.headerSubtext]}>
-              Nivel {level} • {xp}/{xpForNextLevel} XP
-            </Text>
+            <Text style={[theme.text.body, styles.headerSubtext]}>Nivel {level}</Text>
           </View>
 
           <BadgeSticker
@@ -88,7 +87,12 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* Barra de progreso de nivel */}
+        {/* Indicador y barra de progreso de nivel */}
+        <View style={styles.xpRow}>
+          <Text style={styles.xpLabel}>
+            {xp}/{xpForNextLevel} XP
+          </Text>
+        </View>
         <View style={styles.xpBar}>
           <View style={[styles.xpFill, { width: `${progressPercentage}%` }]} />
         </View>
@@ -106,10 +110,15 @@ export default function HomeScreen() {
         <View style={styles.grid}>
           {/* Pasos */}
           <PanelCard style={styles.gridItem}>
-            <StepsGauge steps={todaySteps} goal={dailyGoalSteps} size={100} />
-            <TouchableOpacity style={styles.ctaButton}>
-              <Text style={styles.ctaText}>Sincronizar</Text>
-            </TouchableOpacity>
+            <StepsGauge
+              steps={todaySteps}
+              goal={dailyGoalSteps}
+              size={100}
+              onSync={() => {
+                // TODO: Implementar sincronización con Health/Google Fit
+                console.log('Sincronizando pasos...');
+              }}
+            />
           </PanelCard>
 
           {/* Hidratación */}
@@ -138,20 +147,10 @@ export default function HomeScreen() {
         <TouchableOpacity
           style={styles.missionButton}
           onPress={() => router.push('/exercises')}
-          activeOpacity={0.8}
+          activeOpacity={0.7}
         >
-          <LinearGradient
-            colors={['#FCD34D', '#F59E0B']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.missionGradient}
-          >
-            <Text style={styles.missionIcon}>⚡</Text>
-            <View>
-              <Text style={styles.missionTitle}>START DAILY MISSION</Text>
-              <Text style={styles.missionSubtitle}>Completa tu entrenamiento diario</Text>
-            </View>
-          </LinearGradient>
+          <Text style={styles.missionTitle}>Iniciar Misión Diaria</Text>
+          <Text style={styles.missionIcon}>→</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -174,22 +173,33 @@ const styles = StyleSheet.create({
     color: theme.colors.ink,
   },
   headerSubtext: {
-    color: theme.colors.cyan,
+    color: theme.colors.ink,
     marginTop: 4,
   },
+  xpRow: {
+    alignItems: 'flex-end',
+    marginBottom: 6,
+  },
+  xpLabel: {
+    ...theme.typography.caption,
+    color: theme.colors.ink,
+    opacity: 0.9,
+  },
   levelBadge: {
-    backgroundColor: 'rgba(139, 92, 246, 0.3)',
+    backgroundColor: theme.colors.paperLight,
     borderColor: theme.colors.primary,
   },
   xpBar: {
-    height: 8,
-    backgroundColor: 'rgba(139, 92, 246, 0.2)',
+    height: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
     borderRadius: theme.borderRadius.round,
     overflow: 'hidden',
+    borderWidth: theme.borderWidth.thin,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
   },
   xpFill: {
     height: '100%',
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.cyan,
   },
   content: {
     flex: 1,
@@ -205,43 +215,33 @@ const styles = StyleSheet.create({
   gridItem: {
     flex: 1,
   },
-  ctaButton: {
-    marginTop: theme.spacing.sm,
-    padding: theme.spacing.sm,
-    backgroundColor: theme.colors.secondary,
-    borderRadius: theme.borderRadius.sm,
-    borderWidth: theme.borderWidth.thin,
-    borderColor: theme.colors.border,
-    alignItems: 'center',
-  },
-  ctaText: {
-    ...theme.typography.caption,
-    color: theme.colors.ink,
-    fontWeight: '700',
-  },
   missionButton: {
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: theme.borderWidth.medium,
-    borderColor: theme.colors.border,
-    overflow: 'hidden',
-  },
-  missionGradient: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: theme.spacing.lg,
-    gap: theme.spacing.md,
-  },
-  missionIcon: {
-    fontSize: 48,
+    justifyContent: 'space-between',
+    backgroundColor: '#06B6D4',
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    borderRadius: 14,
+    shadowColor: '#06B6D4',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 4,
   },
   missionTitle: {
     ...theme.typography.h3,
-    color: theme.colors.ink,
-    fontWeight: '800',
+    color: '#0F172A',
+    fontWeight: '700',
+    fontSize: 17,
+    letterSpacing: 0.3,
   },
-  missionSubtitle: {
-    ...theme.typography.bodySmall,
-    color: theme.colors.ink,
-    opacity: 0.9,
+  missionIcon: {
+    fontSize: 22,
+    color: '#0F172A',
+    fontWeight: '700',
   },
 });
