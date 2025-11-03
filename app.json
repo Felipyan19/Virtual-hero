@@ -1,0 +1,68 @@
+{
+  "expo": {
+    "name": "Virtual Hero",
+    "slug": "virtual-hero",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "virtualhero",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#6D28D9"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.virtualhero.virtualhero",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "Virtual Hero necesita acceso a tus datos de salud para rastrear tus pasos, sueño y actividad física.",
+        "NSHealthUpdateUsageDescription": "Virtual Hero necesita permiso para actualizar tus datos de salud y sincronizar tu progreso.",
+        "NSMotionUsageDescription": "Virtual Hero usa el sensor de movimiento para contar tus pasos cuando entrenas."
+      },
+      "entitlements": {
+        "com.apple.developer.healthkit": true,
+        "com.apple.developer.healthkit.access": []
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#6D28D9"
+      },
+      "package": "com.virtualhero.virtualhero",
+      "permissions": [
+        "android.permission.ACTIVITY_RECOGNITION",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#6D28D9"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "virtual-hero-expo"
+      }
+    }
+  }
+}

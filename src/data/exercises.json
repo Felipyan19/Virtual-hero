@@ -1,0 +1,227 @@
+[
+  {
+    "id": "push-ups",
+    "name": "Flexiones de Pecho",
+    "muscle": "Pecho y Tríceps",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Ejercicio clásico para fortalecer pecho, brazos y core. Mantén el cuerpo recto como una tabla."
+  },
+  {
+    "id": "squats",
+    "name": "Sentadillas",
+    "muscle": "Piernas y Glúteos",
+    "difficulty": "fácil",
+    "duration": 120,
+    "xp": 25,
+    "description": "Fortalece tus piernas y glúteos. Baja hasta que tus muslos estén paralelos al suelo."
+  },
+  {
+    "id": "plank",
+    "name": "Plancha",
+    "muscle": "Core",
+    "difficulty": "medio",
+    "duration": 60,
+    "xp": 20,
+    "description": "Ejercicio isométrico perfecto para el abdomen. Mantén el cuerpo recto y aprieta el core."
+  },
+  {
+    "id": "lunges",
+    "name": "Zancadas",
+    "muscle": "Piernas",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Alterna piernas dando pasos largos. Baja la rodilla trasera casi hasta el suelo."
+  },
+  {
+    "id": "jumping-jacks",
+    "name": "Jumping Jacks",
+    "muscle": "Cardio",
+    "difficulty": "fácil",
+    "duration": 120,
+    "xp": 20,
+    "description": "Ejercicio cardiovascular clásico. Salta abriendo brazos y piernas simultáneamente."
+  },
+  {
+    "id": "mountain-climbers",
+    "name": "Escaladores",
+    "muscle": "Core y Cardio",
+    "difficulty": "difícil",
+    "duration": 120,
+    "xp": 40,
+    "description": "Desde posición de plancha, alterna llevando las rodillas al pecho rápidamente."
+  },
+  {
+    "id": "tricep-dips",
+    "name": "Fondos de Tríceps",
+    "muscle": "Tríceps",
+    "difficulty": "medio",
+    "duration": 120,
+    "xp": 25,
+    "description": "Usa una silla o banco. Baja tu cuerpo flexionando los codos hasta 90 grados."
+  },
+  {
+    "id": "burpees",
+    "name": "Burpees",
+    "muscle": "Cuerpo Completo",
+    "difficulty": "difícil",
+    "duration": 180,
+    "xp": 50,
+    "description": "El ejercicio más completo. Combina sentadilla, flexión y salto en un solo movimiento."
+  },
+  {
+    "id": "bicycle-crunches",
+    "name": "Abdominales Bicicleta",
+    "muscle": "Abdomen",
+    "difficulty": "medio",
+    "duration": 120,
+    "xp": 25,
+    "description": "Acostado, alterna codos con rodillas opuestas en movimiento de pedaleo."
+  },
+  {
+    "id": "high-knees",
+    "name": "Rodillas Altas",
+    "muscle": "Cardio y Piernas",
+    "difficulty": "fácil",
+    "duration": 90,
+    "xp": 20,
+    "description": "Corre en el lugar elevando las rodillas lo más alto posible."
+  },
+  {
+    "id": "wall-sit",
+    "name": "Sentadilla Isométrica",
+    "muscle": "Piernas",
+    "difficulty": "medio",
+    "duration": 60,
+    "xp": 20,
+    "description": "Apoya la espalda en la pared y mantén posición de sentadilla. Resiste!"
+  },
+  {
+    "id": "superman",
+    "name": "Superman",
+    "muscle": "Espalda Baja",
+    "difficulty": "fácil",
+    "duration": 90,
+    "xp": 15,
+    "description": "Boca abajo, eleva brazos y piernas simultáneamente. ¡Como volando!"
+  },
+  {
+    "id": "side-plank",
+    "name": "Plancha Lateral",
+    "muscle": "Core Oblicuos",
+    "difficulty": "medio",
+    "duration": 90,
+    "xp": 25,
+    "description": "Apoya un antebrazo y mantén el cuerpo recto de lado. Fortalece oblicuos."
+  },
+  {
+    "id": "russian-twists",
+    "name": "Giros Rusos",
+    "muscle": "Abdomen Oblicuos",
+    "difficulty": "medio",
+    "duration": 120,
+    "xp": 25,
+    "description": "Sentado, gira el torso de lado a lado. Puedes usar peso para más intensidad."
+  },
+  {
+    "id": "box-jumps",
+    "name": "Saltos al Cajón",
+    "muscle": "Piernas y Potencia",
+    "difficulty": "difícil",
+    "duration": 120,
+    "xp": 40,
+    "description": "Salta explosivamente a una superficie elevada. Desarrolla potencia."
+  },
+  {
+    "id": "diamond-push-ups",
+    "name": "Flexiones Diamante",
+    "muscle": "Tríceps y Pecho",
+    "difficulty": "difícil",
+    "duration": 120,
+    "xp": 40,
+    "description": "Flexiones con manos juntas formando un diamante. Enfoque en tríceps."
+  },
+  {
+    "id": "flutter-kicks",
+    "name": "Patadas de Natación",
+    "muscle": "Abdomen Bajo",
+    "difficulty": "fácil",
+    "duration": 90,
+    "xp": 20,
+    "description": "Acostado, alterna elevando piernas en movimiento de nado."
+  },
+  {
+    "id": "calf-raises",
+    "name": "Elevación de Talones",
+    "muscle": "Pantorrillas",
+    "difficulty": "fácil",
+    "duration": 90,
+    "xp": 15,
+    "description": "De pie, eleva los talones hasta quedar en punta de pies. Repite."
+  },
+  {
+    "id": "glute-bridges",
+    "name": "Puente de Glúteos",
+    "muscle": "Glúteos",
+    "difficulty": "fácil",
+    "duration": 90,
+    "xp": 20,
+    "description": "Acostado boca arriba, eleva la cadera apretando glúteos."
+  },
+  {
+    "id": "bear-crawl",
+    "name": "Gateo de Oso",
+    "muscle": "Cuerpo Completo",
+    "difficulty": "medio",
+    "duration": 120,
+    "xp": 30,
+    "description": "Gatea manteniendo rodillas elevadas del suelo. Movimiento primal completo."
+  },
+  {
+    "id": "leg-raises",
+    "name": "Elevación de Piernas",
+    "muscle": "Abdomen Bajo",
+    "difficulty": "medio",
+    "duration": 90,
+    "xp": 25,
+    "description": "Acostado, eleva ambas piernas juntas hasta vertical. Control en el descenso."
+  },
+  {
+    "id": "jump-rope",
+    "name": "Saltar la Cuerda",
+    "muscle": "Cardio y Pantorrillas",
+    "difficulty": "fácil",
+    "duration": 180,
+    "xp": 25,
+    "description": "Cardio clásico y efectivo. Mantén ritmo constante y aterrizajes suaves."
+  },
+  {
+    "id": "pike-push-ups",
+    "name": "Flexiones Pike",
+    "muscle": "Hombros",
+    "difficulty": "difícil",
+    "duration": 120,
+    "xp": 35,
+    "description": "Cadera elevada, flexión enfocada en hombros. Preparación para parada de manos."
+  },
+  {
+    "id": "inchworm",
+    "name": "Gusano",
+    "muscle": "Cuerpo Completo",
+    "difficulty": "medio",
+    "duration": 120,
+    "xp": 25,
+    "description": "Desde de pie, baja con manos hasta plancha y vuelve. Excelente estiramiento dinámico."
+  },
+  {
+    "id": "v-ups",
+    "name": "V-Ups",
+    "muscle": "Abdomen Completo",
+    "difficulty": "difícil",
+    "duration": 90,
+    "xp": 40,
+    "description": "Acostado, eleva piernas y torso simultáneamente formando una V. Avanzado!"
+  }
+]
