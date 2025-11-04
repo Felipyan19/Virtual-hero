@@ -20,5 +20,69 @@ allprojects {
   }
 }
 
+// Fix para react-native-google-fit: reemplazar compile() deprecado con implementation
+// Este parche se aplica antes de evaluar cualquier proyecto
+def googleFitBuildFile = file("${rootDir}/../node_modules/react-native-google-fit/android/build.gradle")
+if (googleFitBuildFile.exists()) {
+  def content = googleFitBuildFile.text
+  def modified = false
+  
+  // Reemplazar compile() con implementation
+  if (content.contains('compile(')) {
+    content = content.replaceAll(/compile\s*\(/, 'implementation(')
+    modified = true
+  }
+  
+  // Reemplazar compile fileTree con implementation fileTree
+  if (content.contains('compile fileTree')) {
+    content = content.replaceAll(/compile\s+fileTree/, 'implementation fileTree')
+    modified = true
+  }
+  
+  // Reemplazar compile project con implementation project
+  if (content.contains('compile project')) {
+    content = content.replaceAll(/compile\s+project/, 'implementation project')
+    modified = true
+  }
+  
+  if (modified) {
+    googleFitBuildFile.text = content
+    println "✅ Parcheado react-native-google-fit/build.gradle para compatibilidad con Gradle 8+"
+  }
+}
+
+// También aplicar parche usando subprojects para asegurar que se ejecute
+subprojects {
+  beforeEvaluate { project ->
+    if (project.name == 'react-native-google-fit' || project.path.contains('react-native-google-fit')) {
+      def buildFile = project.buildFile
+      if (buildFile != null && buildFile.exists()) {
+        def content = buildFile.text
+        def modified = false
+        
+        if (content.contains('compile(')) {
+          content = content.replaceAll(/compile\s*\(/, 'implementation(')
+          modified = true
+        }
+        
+        if (content.contains('compile fileTree')) {
+          content = content.replaceAll(/compile\s+fileTree/, 'implementation fileTree')
+          modified = true
+        }
+        
+        if (content.contains('compile project')) {
+          content = content.replaceAll(/compile\s+project/, 'implementation project')
+          modified = true
+        }
+        
+        if (modified) {
+          buildFile.text = content
+          println "✅ Parcheado ${project.path}/build.gradle para compatibilidad con Gradle 8+"
+        }
+      }
+    }
+  }
+}
+
 apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"
