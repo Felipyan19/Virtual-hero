@@ -8,7 +8,10 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { initDatabase } from '@/db/client';
-import { requestNotificationPermissions } from '@/lib/notifications';
+import {
+  requestNotificationPermissions,
+  restoreNotificationsFromSettings,
+} from '@/lib/notifications';
 import { SplashScreen } from '@/components/SplashScreen';
 import { useAuth } from '@/store/useAuth';
 import { useFonts } from 'expo-font';
@@ -55,7 +58,9 @@ export default function RootLayout() {
         // Intentar inicializar notificaciones (opcional)
         try {
           await requestNotificationPermissions();
-          console.log('[App] Notificaciones inicializadas');
+          // Restaurar notificaciones programadas basadas en configuración guardada
+          await restoreNotificationsFromSettings();
+          console.log('[App] Notificaciones inicializadas y restauradas');
         } catch (notifError) {
           console.warn('[App] Notificaciones no disponibles:', notifError);
         }

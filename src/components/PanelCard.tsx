@@ -11,6 +11,7 @@ interface PanelCardProps {
   children: React.ReactNode;
   variant?: 'base' | 'elevated' | 'flat';
   gradient?: string[];
+  gradientLocations?: number[];
   style?: ViewStyle;
 }
 
@@ -18,6 +19,7 @@ export const PanelCard: React.FC<PanelCardProps> = ({
   children,
   variant = 'base',
   gradient,
+  gradientLocations,
   style,
 }) => {
   if (gradient) {
@@ -25,6 +27,7 @@ export const PanelCard: React.FC<PanelCardProps> = ({
       <View style={[styles.gradientWrapper, style]}>
         <LinearGradient
           colors={gradient}
+          locations={gradientLocations}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.gradient}

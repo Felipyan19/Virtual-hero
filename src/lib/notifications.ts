@@ -33,7 +33,7 @@ export const requestNotificationPermissions = async (): Promise<boolean> => {
       return false;
     }
 
-    // Configurar canal en Android
+    // Configurar canales en Android
     if (Platform.OS === 'android') {
       await Notifications.setNotificationChannelAsync('hydration', {
         name: 'Recordatorios de Hidratación',
@@ -47,6 +47,20 @@ export const requestNotificationPermissions = async (): Promise<boolean> => {
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 500, 250, 500],
         lightColor: '#10B981',
+      });
+
+      await Notifications.setNotificationChannelAsync('exercise', {
+        name: 'Recordatorios de Ejercicio',
+        importance: Notifications.AndroidImportance.HIGH,
+        vibrationPattern: [0, 300, 200, 300],
+        lightColor: '#F59E0B',
+      });
+
+      await Notifications.setNotificationChannelAsync('health', {
+        name: 'Recordatorios de Salud',
+        importance: Notifications.AndroidImportance.DEFAULT,
+        vibrationPattern: [0, 200, 100, 200],
+        lightColor: '#3B82F6',
       });
     }
 
@@ -197,6 +211,507 @@ export const showStreakNotification = async (streakCount: number): Promise<void>
     console.log(`[Notificaciones] Racha de ${streakCount} días`);
   } catch (error) {
     console.error('[Notificaciones] Error:', error);
+  }
+};
+
+/**
+ * Frases motivadoras para ejercicio
+ */
+const EXERCISE_MOTIVATIONAL_PHRASES = [
+  '¡Es hora de mover el cuerpo, héroe! 💪',
+  '¡Tu cuerpo te lo agradecerá! Hora de ejercitarte 🏃',
+  '¡No hay excusas! Vamos a entrenar 🔥',
+  '¡El héroe que llevas dentro te está esperando! 🦸',
+  '¡Cada paso cuenta! Hora de tu entrenamiento ⚡',
+  '¡Tu yo del futuro te lo agradecerá! 🌟',
+  '¡Desafía tus límites! Es hora de ejercicio 💥',
+  '¡La consistencia es clave! Vamos a entrenar 🎯',
+  '¡Tu salud es tu mayor tesoro! Hora de moverte 💎',
+  '¡Los héroes entrenan todos los días! 🏋️',
+];
+
+/**
+ * Programar recordatorios de ejercicio
+ * @param times - Array de horas [7, 12, 18] para 7am, 12pm, 6pm
+ */
+export const scheduleExerciseReminders = async (times: number[] = [7, 12, 18]): Promise<void> => {
+  try {
+    await cancelExerciseReminders();
+
+    const hasPermission = await requestNotificationPermissions();
+    if (!hasPermission) return;
+
+    for (const hour of times) {
+      const phrase =
+        EXERCISE_MOTIVATIONAL_PHRASES[
+          Math.floor(Math.random() * EXERCISE_MOTIVATIONAL_PHRASES.length)
+        ];
+      const identifier = `exercise-reminder-${hour}`;
+
+      await Notifications.scheduleNotificationAsync({
+        identifier,
+        content: {
+          title: phrase,
+          body: '¡Dedica 15 minutos a tu entrenamiento! Tu cuerpo es tu templo.',
+          data: { type: 'exercise_reminder' },
+          sound: true,
+          priority: Notifications.AndroidNotificationPriority.HIGH,
+        },
+        trigger: {
+          hour,
+          minute: 0,
+          repeats: true,
+        },
+      });
+    }
+
+    console.log(`[Notificaciones] ${times.length} recordatorios de ejercicio programados`);
+  } catch (error) {
+    console.error('[Notificaciones] Error al programar ejercicio:', error);
+  }
+};
+
+/**
+ * Cancelar recordatorios de ejercicio
+ */
+export const cancelExerciseReminders = async (): Promise<void> => {
+  try {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const exerciseReminders = scheduled.filter((n) =>
+      n.identifier.startsWith('exercise-reminder-')
+    );
+
+    for (const reminder of exerciseReminders) {
+      await Notifications.cancelScheduledNotificationAsync(reminder.identifier);
+    }
+
+    console.log('[Notificaciones] Recordatorios de ejercicio cancelados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al cancelar:', error);
+  }
+};
+
+/**
+ * Programar recordatorio para dormir
+ * @param bedtimeHour - Hora para recordar dormir (ej: 22 = 10 PM)
+ */
+export const scheduleBedtimeReminder = async (bedtimeHour: number = 22): Promise<void> => {
+  try {
+    await cancelBedtimeReminder();
+
+    const hasPermission = await requestNotificationPermissions();
+    if (!hasPermission) return;
+
+    await Notifications.scheduleNotificationAsync({
+      identifier: 'bedtime-reminder',
+      content: {
+        title: '🌙 Hora de descansar, héroe',
+        body: 'Un buen descanso es fundamental. Prepárate para dormir y recuperar energías.',
+        data: { type: 'bedtime_reminder' },
+        sound: true,
+        priority: Notifications.AndroidNotificationPriority.HIGH,
+      },
+      trigger: {
+        hour: bedtimeHour,
+        minute: 0,
+        repeats: true,
+      },
+    });
+
+    console.log('[Notificaciones] Recordatorio de dormir programado');
+  } catch (error) {
+    console.error('[Notificaciones] Error al programar:', error);
+  }
+};
+
+/**
+ * Cancelar recordatorio de dormir
+ */
+export const cancelBedtimeReminder = async (): Promise<void> => {
+  try {
+    await Notifications.cancelScheduledNotificationAsync('bedtime-reminder');
+    console.log('[Notificaciones] Recordatorio de dormir cancelado');
+  } catch (error) {
+    console.error('[Notificaciones] Error al cancelar:', error);
+  }
+};
+
+/**
+ * Programar recordatorios de postura/estiramiento
+ */
+export const schedulePostureReminders = async (
+  intervalHours: number = 1,
+  startHour: number = 9,
+  endHour: number = 18
+): Promise<void> => {
+  try {
+    await cancelPostureReminders();
+
+    const hasPermission = await requestNotificationPermissions();
+    if (!hasPermission) return;
+
+    const messages = [
+      {
+        title: '🧘 Revisa tu postura',
+        body: '¿Estás sentado correctamente? Endereza la espalda y relaja los hombros.',
+      },
+      {
+        title: '🤸 ¡Hora de estirar!',
+        body: 'Levántate y estira el cuerpo por 2 minutos. Tu espalda te lo agradecerá.',
+      },
+      {
+        title: '💺 Postura correcta',
+        body: '¿Estás encorvado? Ajusta tu postura y respira profundo.',
+      },
+      {
+        title: '🏃 Muévete un poco',
+        body: 'Lleva mucho tiempo sentado. Da una pequeña caminata de 5 minutos.',
+      },
+    ];
+
+    let messageIndex = 0;
+    for (let hour = startHour; hour <= endHour; hour += intervalHours) {
+      const message = messages[messageIndex % messages.length];
+      const identifier = `posture-reminder-${hour}`;
+
+      await Notifications.scheduleNotificationAsync({
+        identifier,
+        content: {
+          title: message.title,
+          body: message.body,
+          data: { type: 'posture_reminder' },
+          sound: true,
+          priority: Notifications.AndroidNotificationPriority.DEFAULT,
+        },
+        trigger: {
+          hour,
+          minute: 0,
+          repeats: true,
+        },
+      });
+
+      messageIndex++;
+    }
+
+    console.log('[Notificaciones] Recordatorios de postura programados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al programar:', error);
+  }
+};
+
+/**
+ * Cancelar recordatorios de postura
+ */
+export const cancelPostureReminders = async (): Promise<void> => {
+  try {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const postureReminders = scheduled.filter((n) => n.identifier.startsWith('posture-reminder-'));
+
+    for (const reminder of postureReminders) {
+      await Notifications.cancelScheduledNotificationAsync(reminder.identifier);
+    }
+
+    console.log('[Notificaciones] Recordatorios de postura cancelados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al cancelar:', error);
+  }
+};
+
+/**
+ * Programar recordatorios de descanso visual
+ * (Para personas que trabajan frente a pantallas)
+ */
+export const scheduleEyeRestReminders = async (
+  intervalMinutes: number = 30,
+  startHour: number = 9,
+  endHour: number = 18
+): Promise<void> => {
+  try {
+    await cancelEyeRestReminders();
+
+    const hasPermission = await requestNotificationPermissions();
+    if (!hasPermission) return;
+
+    // Programar recordatorios cada 30 minutos
+    for (let hour = startHour; hour <= endHour; hour++) {
+      for (let minute = 0; minute < 60; minute += intervalMinutes) {
+        if (hour === endHour && minute > 0) break;
+
+        const identifier = `eye-rest-${hour}-${minute}`;
+
+        await Notifications.scheduleNotificationAsync({
+          identifier,
+          content: {
+            title: '👁️ Regla 20-20-20',
+            body: 'Mira algo a 20 pies (6m) de distancia por 20 segundos. Cuida tus ojos.',
+            data: { type: 'eye_rest_reminder' },
+            sound: false, // Sin sonido para no interrumpir
+            priority: Notifications.AndroidNotificationPriority.LOW,
+          },
+          trigger: {
+            hour,
+            minute,
+            repeats: true,
+          },
+        });
+      }
+    }
+
+    console.log('[Notificaciones] Recordatorios de descanso visual programados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al programar:', error);
+  }
+};
+
+/**
+ * Cancelar recordatorios de descanso visual
+ */
+export const cancelEyeRestReminders = async (): Promise<void> => {
+  try {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const eyeReminders = scheduled.filter((n) => n.identifier.startsWith('eye-rest-'));
+
+    for (const reminder of eyeReminders) {
+      await Notifications.cancelScheduledNotificationAsync(reminder.identifier);
+    }
+
+    console.log('[Notificaciones] Recordatorios visuales cancelados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al cancelar:', error);
+  }
+};
+
+/**
+ * Programar recordatorios de meditación/mindfulness
+ */
+export const scheduleMeditationReminders = async (
+  times: number[] = [8, 20] // 8 AM y 8 PM
+): Promise<void> => {
+  try {
+    await cancelMeditationReminders();
+
+    const hasPermission = await requestNotificationPermissions();
+    if (!hasPermission) return;
+
+    const messages = [
+      {
+        title: '🧘 Meditación matutina',
+        body: 'Comienza el día con 5 minutos de meditación. Centra tu mente.',
+      },
+      {
+        title: '🌅 Mindfulness nocturno',
+        body: 'Relájate con una breve sesión de respiración consciente.',
+      },
+    ];
+
+    times.forEach(async (hour, index) => {
+      const message = messages[index % messages.length];
+      const identifier = `meditation-reminder-${hour}`;
+
+      await Notifications.scheduleNotificationAsync({
+        identifier,
+        content: {
+          title: message.title,
+          body: message.body,
+          data: { type: 'meditation_reminder' },
+          sound: true,
+          priority: Notifications.AndroidNotificationPriority.DEFAULT,
+        },
+        trigger: {
+          hour,
+          minute: 0,
+          repeats: true,
+        },
+      });
+    });
+
+    console.log('[Notificaciones] Recordatorios de meditación programados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al programar:', error);
+  }
+};
+
+/**
+ * Cancelar recordatorios de meditación
+ */
+export const cancelMeditationReminders = async (): Promise<void> => {
+  try {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const meditationReminders = scheduled.filter((n) =>
+      n.identifier.startsWith('meditation-reminder-')
+    );
+
+    for (const reminder of meditationReminders) {
+      await Notifications.cancelScheduledNotificationAsync(reminder.identifier);
+    }
+
+    console.log('[Notificaciones] Recordatorios de meditación cancelados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al cancelar:', error);
+  }
+};
+
+/**
+ * Programar recordatorios de alimentación saludable
+ */
+export const scheduleHealthyEatingReminders = async (
+  mealTimes: number[] = [7, 13, 19] // Desayuno, almuerzo, cena
+): Promise<void> => {
+  try {
+    await cancelHealthyEatingReminders();
+
+    const hasPermission = await requestNotificationPermissions();
+    if (!hasPermission) return;
+
+    const messages = [
+      {
+        title: '🥗 Hora del desayuno',
+        body: 'El desayuno es importante. Come algo nutritivo para empezar bien el día.',
+      },
+      {
+        title: '🍽️ Hora del almuerzo',
+        body: 'Recarga energías con una comida balanceada. ¡Tu cuerpo lo necesita!',
+      },
+      {
+        title: '🥘 Hora de cenar',
+        body: 'Una cena ligera y saludable te ayudará a descansar mejor.',
+      },
+    ];
+
+    mealTimes.forEach(async (hour, index) => {
+      const message = messages[index % messages.length];
+      const identifier = `meal-reminder-${hour}`;
+
+      await Notifications.scheduleNotificationAsync({
+        identifier,
+        content: {
+          title: message.title,
+          body: message.body,
+          data: { type: 'meal_reminder' },
+          sound: true,
+          priority: Notifications.AndroidNotificationPriority.DEFAULT,
+        },
+        trigger: {
+          hour,
+          minute: 0,
+          repeats: true,
+        },
+      });
+    });
+
+    console.log('[Notificaciones] Recordatorios de comidas programados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al programar:', error);
+  }
+};
+
+/**
+ * Cancelar recordatorios de alimentación
+ */
+export const cancelHealthyEatingReminders = async (): Promise<void> => {
+  try {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const mealReminders = scheduled.filter((n) => n.identifier.startsWith('meal-reminder-'));
+
+    for (const reminder of mealReminders) {
+      await Notifications.cancelScheduledNotificationAsync(reminder.identifier);
+    }
+
+    console.log('[Notificaciones] Recordatorios de comidas cancelados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al cancelar:', error);
+  }
+};
+
+/**
+ * Programar todos los recordatorios por defecto
+ */
+export const scheduleAllDefaultReminders = async (): Promise<void> => {
+  try {
+    await scheduleWaterReminders(2); // Cada 2 horas
+    await scheduleExerciseReminders([7, 12, 18]); // 7am, 12pm, 6pm
+    await scheduleBedtimeReminder(22); // 10 PM
+    await schedulePostureReminders(1, 9, 18); // Cada hora de 9am a 6pm
+    await scheduleMeditationReminders([8, 20]); // 8am y 8pm
+    await scheduleHealthyEatingReminders([7, 13, 19]); // 7am, 1pm, 7pm
+
+    console.log('[Notificaciones] Todos los recordatorios programados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al programar todos:', error);
+  }
+};
+
+/**
+ * Cancelar todos los recordatorios de salud (mantiene logros y rachas)
+ */
+export const cancelAllHealthReminders = async (): Promise<void> => {
+  try {
+    await cancelWaterReminders();
+    await cancelExerciseReminders();
+    await cancelBedtimeReminder();
+    await cancelPostureReminders();
+    await cancelEyeRestReminders();
+    await cancelMeditationReminders();
+    await cancelHealthyEatingReminders();
+
+    console.log('[Notificaciones] Todos los recordatorios de salud cancelados');
+  } catch (error) {
+    console.error('[Notificaciones] Error al cancelar todos:', error);
+  }
+};
+
+/**
+ * Restaurar notificaciones basadas en configuración guardada
+ * Debe llamarse al iniciar la app
+ */
+export const restoreNotificationsFromSettings = async (): Promise<void> => {
+  try {
+    // Importar AsyncStorage dinámicamente para evitar errores de dependencia circular
+    const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+
+    const STORAGE_KEYS = {
+      WATER_REMINDERS: 'notifications_water_enabled',
+      EXERCISE_REMINDERS: 'notifications_exercise_enabled',
+      BEDTIME_REMINDER: 'notifications_bedtime_enabled',
+      POSTURE_REMINDERS: 'notifications_posture_enabled',
+      EYE_REST_REMINDERS: 'notifications_eye_rest_enabled',
+      MEDITATION_REMINDERS: 'notifications_meditation_enabled',
+      MEAL_REMINDERS: 'notifications_meal_enabled',
+    };
+
+    const settings = await AsyncStorage.multiGet(Object.values(STORAGE_KEYS));
+
+    for (const [key, value] of settings) {
+      if (value === 'true') {
+        switch (key) {
+          case STORAGE_KEYS.WATER_REMINDERS:
+            await scheduleWaterReminders(2);
+            break;
+          case STORAGE_KEYS.EXERCISE_REMINDERS:
+            await scheduleExerciseReminders([7, 12, 18]);
+            break;
+          case STORAGE_KEYS.BEDTIME_REMINDER:
+            await scheduleBedtimeReminder(22);
+            break;
+          case STORAGE_KEYS.POSTURE_REMINDERS:
+            await schedulePostureReminders(1, 9, 18);
+            break;
+          case STORAGE_KEYS.EYE_REST_REMINDERS:
+            await scheduleEyeRestReminders(30, 9, 18);
+            break;
+          case STORAGE_KEYS.MEDITATION_REMINDERS:
+            await scheduleMeditationReminders([8, 20]);
+            break;
+          case STORAGE_KEYS.MEAL_REMINDERS:
+            await scheduleHealthyEatingReminders([7, 13, 19]);
+            break;
+        }
+      }
+    }
+
+    console.log('[Notificaciones] Notificaciones restauradas desde configuración');
+  } catch (error) {
+    console.error('[Notificaciones] Error al restaurar notificaciones:', error);
   }
 };
 

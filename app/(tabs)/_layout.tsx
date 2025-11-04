@@ -111,6 +111,12 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="exercises/[id]"
+        options={{
+          href: null, // Oculta esta pantalla del tab bar
+        }}
+      />
     </Tabs>
   );
 }
