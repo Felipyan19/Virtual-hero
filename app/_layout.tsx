@@ -59,6 +59,9 @@ export default function RootLayout() {
         try {
           await requestNotificationPermissions();
           // Restaurar notificaciones programadas basadas en configuración guardada
+          // Nota: restoreNotificationsFromSettings() tiene protección interna contra
+          // ejecuciones múltiples (flag global) para evitar notificaciones duplicadas
+          // especialmente durante Hot Reload en desarrollo
           await restoreNotificationsFromSettings();
           console.log('[App] Notificaciones inicializadas y restauradas');
         } catch (notifError) {
