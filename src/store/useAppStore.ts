@@ -157,6 +157,7 @@ export const useAppStore = create<AppState>()(
         let newXP = state.xp + amount;
         let newLevel = state.level;
         let xpForNext = state.xpForNextLevel;
+        const previousLevel = state.level;
 
         // Verificar si sube de nivel
         while (newXP >= xpForNext) {
@@ -178,6 +179,14 @@ export const useAppStore = create<AppState>()(
           level: newLevel,
           xpForNextLevel: xpForNext,
         });
+
+        // Trigger level up event if leveled up
+        if (newLevel > previousLevel) {
+          // Importar dinámicamente para evitar dependencias circulares
+          import('./useEventStore').then(({ useEventStore }) => {
+            useEventStore.getState().triggerLevelUp(newLevel);
+          });
+        }
 
         console.log(
           `[XP] +${amount} desde ${source}. Nivel ${newLevel}, XP: ${newXP}/${xpForNext}`
@@ -236,10 +245,21 @@ export const useAppStore = create<AppState>()(
           return;
         }
 
+        const unlockedAchievement = {
+          ...achievement,
+          isUnlocked: true,
+          unlockedAt: new Date(),
+        };
+
         set({
           achievements: state.achievements.map((a) =>
-            a.id === achievementId ? { ...a, isUnlocked: true, unlockedAt: new Date() } : a
+            a.id === achievementId ? unlockedAchievement : a
           ),
+        });
+
+        // Trigger achievement unlocked event
+        import('./useEventStore').then(({ useEventStore }) => {
+          useEventStore.getState().triggerAchievementUnlocked(unlockedAchievement);
         });
 
         // Dar recompensa de XP
