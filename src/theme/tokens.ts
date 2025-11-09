@@ -16,6 +16,9 @@ export const colors = {
   paperLight: '#2D2640', // Cards/paneles más claros
   ink: '#F9FAFB', // Texto claro
   border: '#3D3555', // Contornos sutiles
+  background: '#1E1B2E', // Alias para paper
+  text: '#F9FAFB', // Alias para ink
+  textSecondary: '#94A3B8', // Alias para gray600
 
   // Gradientes héroe (ajustados para mejor contraste)
   gradientHero: ['#7C3AED', '#9333EA', '#A855F7'],
@@ -26,6 +29,7 @@ export const colors = {
   success: '#10B981',
   warning: '#FCD34D',
   danger: '#EF4444',
+  error: '#EF4444', // Alias para danger
   info: '#3B82F6',
 
   // Neutrales
@@ -96,6 +100,13 @@ export const shadows = {
     shadowRadius: 0,
     elevation: 4,
   },
+  medium: {
+    shadowColor: colors.border,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 4,
+  },
   lg: {
     shadowColor: colors.border,
     shadowOffset: { width: 4, height: 4 },
@@ -104,6 +115,13 @@ export const shadows = {
     elevation: 6,
   },
   xl: {
+    shadowColor: colors.border,
+    shadowOffset: { width: 6, height: 6 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 8,
+  },
+  strong: {
     shadowColor: colors.border,
     shadowOffset: { width: 6, height: 6 },
     shadowOpacity: 1,

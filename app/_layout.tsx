@@ -12,8 +12,13 @@ import {
   requestNotificationPermissions,
   restoreNotificationsFromSettings,
 } from '@/lib/notifications';
+import { initSounds } from '@/lib/sounds';
 import { SplashScreen } from '@/components/SplashScreen';
+import { AchievementUnlocked } from '@/components/AchievementUnlocked';
+import { LevelUpOverlay } from '@/components/LevelUpOverlay';
 import { useAuth } from '@/store/useAuth';
+import { useAppStore } from '@/store/useAppStore';
+import { useEventStore } from '@/store/useEventStore';
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -48,12 +53,23 @@ export default function RootLayout() {
     ...MaterialCommunityIcons.font,
   });
 
+  // Event listeners para celebraciones
+  const soundEnabled = useAppStore((state) => state.soundEnabled);
+  const levelUpEvent = useEventStore((state) => state.levelUpEvent);
+  const achievementEvent = useEventStore((state) => state.achievementEvent);
+  const clearLevelUpEvent = useEventStore((state) => state.clearLevelUpEvent);
+  const clearAchievementEvent = useEventStore((state) => state.clearAchievementEvent);
+
   useEffect(() => {
     // Inicializar DB y permisos
     const init = async () => {
       try {
         await initDatabase();
         console.log('[App] Base de datos inicializada');
+
+        // Inicializar sistema de audio
+        await initSounds();
+        console.log('[App] Sistema de audio inicializado');
 
         // Intentar inicializar notificaciones (opcional)
         try {
@@ -91,6 +107,20 @@ export default function RootLayout() {
             <Stack.Screen name="index" options={{ headerShown: false }} />
           </Stack>
         </NavigationHandler>
+
+        {/* Overlays globales de celebración */}
+        <LevelUpOverlay
+          level={levelUpEvent?.newLevel || null}
+          visible={levelUpEvent !== null}
+          soundEnabled={soundEnabled}
+          onClose={clearLevelUpEvent}
+        />
+        <AchievementUnlocked
+          achievement={achievementEvent?.achievement || null}
+          visible={achievementEvent !== null}
+          soundEnabled={soundEnabled}
+          onClose={clearAchievementEvent}
+        />
       </GestureHandlerRootView>
     </QueryClientProvider>
   );

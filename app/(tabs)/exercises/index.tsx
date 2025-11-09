@@ -38,7 +38,7 @@ export default function ExercisesScreen() {
   const [selectedCategory, setSelectedCategory] = useState<ExerciseCategory | 'Todos'>('Todos');
   const [scaleAnim] = useState(new Animated.Value(1));
 
-  const exercises: Exercise[] = exercisesData;
+  const exercises: Exercise[] = exercisesData as Exercise[];
 
   const filteredExercises = useMemo(() => {
     let result = exercises;

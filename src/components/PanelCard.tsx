@@ -10,8 +10,8 @@ import theme from '@/theme/theme';
 interface PanelCardProps {
   children: React.ReactNode;
   variant?: 'base' | 'elevated' | 'flat';
-  gradient?: string[];
-  gradientLocations?: number[];
+  gradient?: readonly [string, string, ...string[]];
+  gradientLocations?: readonly [number, number, ...number[]];
   style?: ViewStyle;
 }
 

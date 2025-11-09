@@ -104,7 +104,7 @@ export const initDatabase = async (): Promise<void> => {
 /**
  * Obtener instancia de DB
  */
-const getDB = (): SQLite.SQLiteDatabase => {
+const getDB = (): SQLiteDatabase => {
   if (!db) {
     throw new Error('Base de datos no inicializada. Llama a initDatabase() primero.');
   }
@@ -142,7 +142,7 @@ export interface DailyLog {
 export const getLog = async (date: string): Promise<DailyLog | null> => {
   try {
     const database = getDB();
-    const result = await database.getFirstAsync<any>('SELECT * FROM daily_logs WHERE date = ?', [
+    const result = await database.getFirstAsync('SELECT * FROM daily_logs WHERE date = ?', [
       date,
     ]);
 
@@ -252,12 +252,12 @@ export const upsertLog = async (log: Partial<DailyLog> & { date: string }): Prom
 export const getRecentLogs = async (days: number = 7): Promise<DailyLog[]> => {
   try {
     const database = getDB();
-    const results = await database.getAllAsync<any>(
+    const results = await database.getAllAsync(
       'SELECT * FROM daily_logs ORDER BY date DESC LIMIT ?',
       [days]
     );
 
-    return results.map((r) => ({
+    return results.map((r: any) => ({
       ...r,
       steps_goal_met: Boolean(r.steps_goal_met),
       water_goal_met: Boolean(r.water_goal_met),
@@ -307,7 +307,7 @@ export const addXPHistory = async (
 export const getXPHistory = async (limit: number = 50): Promise<XPHistoryEntry[]> => {
   try {
     const database = getDB();
-    const results = await database.getAllAsync<XPHistoryEntry>(
+    const results = await database.getAllAsync(
       'SELECT * FROM xp_history ORDER BY created_at DESC LIMIT ?',
       [limit]
     );
@@ -364,13 +364,13 @@ export const getExerciseCompletions = async (
     const database = getDB();
 
     if (exerciseId) {
-      const results = await database.getAllAsync<ExerciseCompletion>(
+      const results = await database.getAllAsync(
         'SELECT * FROM exercise_completions WHERE exercise_id = ? ORDER BY created_at DESC LIMIT ?',
         [exerciseId, limit]
       );
       return results;
     } else {
-      const results = await database.getAllAsync<ExerciseCompletion>(
+      const results = await database.getAllAsync(
         'SELECT * FROM exercise_completions ORDER BY created_at DESC LIMIT ?',
         [limit]
       );

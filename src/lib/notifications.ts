@@ -8,11 +8,12 @@ import { Platform } from 'react-native';
 
 // Configurar comportamiento de notificaciones
 Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
+  handleNotification: async () =>
+    ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }) as Notifications.NotificationBehavior,
 });
 
 /**
@@ -110,7 +111,7 @@ export const scheduleWaterReminders = async (
           hour,
           minute: 0,
           repeats: true,
-        },
+        } as Notifications.NotificationTriggerInput,
       });
     }
 
@@ -261,7 +262,7 @@ export const scheduleExerciseReminders = async (times: number[] = [7, 12, 18]): 
           hour,
           minute: 0,
           repeats: true,
-        },
+        } as Notifications.NotificationTriggerInput,
       });
     }
 
@@ -315,7 +316,7 @@ export const scheduleBedtimeReminder = async (bedtimeHour: number = 22): Promise
         hour: bedtimeHour,
         minute: 0,
         repeats: true,
-      },
+      } as Notifications.NotificationTriggerInput,
     });
 
     console.log('[Notificaciones] Recordatorio de dormir programado');
@@ -387,7 +388,7 @@ export const schedulePostureReminders = async (
           hour,
           minute: 0,
           repeats: true,
-        },
+        } as Notifications.NotificationTriggerInput,
       });
 
       messageIndex++;
@@ -452,7 +453,7 @@ export const scheduleEyeRestReminders = async (
             hour,
             minute,
             repeats: true,
-          },
+          } as Notifications.NotificationTriggerInput,
         });
       }
     }
@@ -521,7 +522,7 @@ export const scheduleMeditationReminders = async (
           hour,
           minute: 0,
           repeats: true,
-        },
+        } as Notifications.NotificationTriggerInput,
       });
     });
 
@@ -595,7 +596,7 @@ export const scheduleHealthyEatingReminders = async (
           hour,
           minute: 0,
           repeats: true,
-        },
+        } as Notifications.NotificationTriggerInput,
       });
     });
 
