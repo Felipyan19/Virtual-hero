@@ -6,6 +6,9 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
+// Flag global para evitar inicialización múltiple
+let notificationsInitialized = false;
+
 // Configurar comportamiento de notificaciones
 Notifications.setNotificationHandler({
   handleNotification: async () =>
@@ -667,6 +670,16 @@ export const cancelAllHealthReminders = async (): Promise<void> => {
  */
 export const restoreNotificationsFromSettings = async (): Promise<void> => {
   try {
+    // Evitar inicialización múltiple (especialmente en desarrollo con Hot Reload)
+    if (notificationsInitialized) {
+      console.log('[Notificaciones] Ya inicializadas, omitiendo restauración');
+      return;
+    }
+
+    // Cancelar todas las notificaciones existentes primero para evitar duplicados
+    console.log('[Notificaciones] Limpiando notificaciones previas...');
+    await Notifications.cancelAllScheduledNotificationsAsync();
+
     // Importar AsyncStorage dinámicamente para evitar errores de dependencia circular
     const AsyncStorage = require('@react-native-async-storage/async-storage').default;
 
@@ -710,6 +723,8 @@ export const restoreNotificationsFromSettings = async (): Promise<void> => {
       }
     }
 
+    // Marcar como inicializado
+    notificationsInitialized = true;
     console.log('[Notificaciones] Notificaciones restauradas desde configuración');
   } catch (error) {
     console.error('[Notificaciones] Error al restaurar notificaciones:', error);
@@ -726,4 +741,12 @@ export const clearAllNotifications = async (): Promise<void> => {
   } catch (error) {
     console.error('[Notificaciones] Error al limpiar:', error);
   }
+};
+
+/**
+ * Resetear el flag de inicialización (útil para testing o cuando el usuario cambia configuraciones)
+ */
+export const resetNotificationsInitialization = (): void => {
+  notificationsInitialized = false;
+  console.log('[Notificaciones] Flag de inicialización reseteado');
 };
