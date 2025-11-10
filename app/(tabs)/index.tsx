@@ -18,6 +18,7 @@ import { WaterCounter } from '@/components/WaterCounter';
 import { SleepEnergyBar } from '@/components/SleepEnergyBar';
 import { BadgeSticker } from '@/components/BadgeSticker';
 import { calculateXP, XPSource } from '@/lib/xp';
+import { getDailyExerciseId } from '@/lib/dailyExercise';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -37,9 +38,16 @@ export default function HomeScreen() {
     targetSleepMinutes,
     todayBedTime,
     todayWakeTime,
+    logSleep,
     updateDayIfNeeded: updateSleepDay,
   } = useSleep();
-  const { todaySteps, dailyGoalSteps, updateDayIfNeeded: updateStepsDay } = useSteps();
+  const {
+    todaySteps,
+    dailyGoalSteps,
+    isLoading: stepsLoading,
+    syncSteps,
+    updateDayIfNeeded: updateStepsDay,
+  } = useSteps();
 
   useEffect(() => {
     // Actualizar días si es necesario
@@ -114,10 +122,8 @@ export default function HomeScreen() {
               steps={todaySteps}
               goal={dailyGoalSteps}
               size={100}
-              onSync={() => {
-                // TODO: Implementar sincronización con Health/Google Fit
-                console.log('Sincronizando pasos...');
-              }}
+              isLoading={stepsLoading}
+              onSync={syncSteps}
             />
           </PanelCard>
 
@@ -140,13 +146,24 @@ export default function HomeScreen() {
             targetMinutes={targetSleepMinutes}
             bedTime={todayBedTime || undefined}
             wakeTime={todayWakeTime || undefined}
+            onLogSleep={(minutes, bedTime, wakeTime) => {
+              logSleep(minutes, bedTime, wakeTime);
+              // Sumar XP por registrar sueño (40 XP si cumple meta)
+              if (minutes >= targetSleepMinutes) {
+                const xpAmount = calculateXP(XPSource.SLEEP_GOAL);
+                addXP(xpAmount, 'Descanso completo');
+              }
+            }}
           />
         </PanelCard>
 
         {/* CTA Misión del día */}
         <TouchableOpacity
           style={styles.missionButton}
-          onPress={() => router.push('/exercises')}
+          onPress={() => {
+            const dailyExerciseId = getDailyExerciseId();
+            router.push(`/exercises/${dailyExerciseId}`);
+          }}
           activeOpacity={0.7}
         >
           <Text style={styles.missionTitle}>Iniciar Misión Diaria</Text>

@@ -2,8 +2,16 @@
  * Exercise Detail Screen - Detalle y ejecución de ejercicio
  */
 
-import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+  Image,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import theme from '@/theme/theme';
@@ -11,8 +19,10 @@ import { PanelCard } from '@/components/PanelCard';
 import { BadgeSticker } from '@/components/BadgeSticker';
 import { TimerChip } from '@/components/TimerChip';
 import { ConfettiPow } from '@/components/ConfettiPow';
+import { MarkdownText } from '@/components/MarkdownText';
 import { useAppStore } from '@/store/useAppStore';
-import { calculateXP, XPSource } from '@/lib/xp';
+import { isDailyExercise } from '@/lib/dailyExercise';
+import { getExerciseImage } from '@/lib/exerciseImages';
 import exercisesData from '@/data/exercises.json';
 
 export default function ExerciseDetailScreen() {
@@ -23,7 +33,58 @@ export default function ExerciseDetailScreen() {
   const [isRunning, setIsRunning] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
 
+  // Animaciones para el badge del ejercicio del día
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const glowAnim = useRef(new Animated.Value(0)).current;
+
   const exercise = exercisesData.find((ex) => ex.id === id);
+  const isDaily = exercise ? isDailyExercise(exercise.id) : false;
+  const xpMultiplier = isDaily ? 2 : 1;
+  const displayXP = exercise ? exercise.xp * xpMultiplier : 0;
+  const exerciseImage = exercise ? getExerciseImage(exercise.id) : undefined;
+
+  // Animación de pulso para el badge
+  useEffect(() => {
+    if (isDaily) {
+      const pulseAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+
+      const glowAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(glowAnim, {
+            toValue: 1,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(glowAnim, {
+            toValue: 0,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+
+      pulseAnimation.start();
+      glowAnimation.start();
+
+      return () => {
+        pulseAnimation.stop();
+        glowAnimation.stop();
+      };
+    }
+  }, [isDaily]);
 
   if (!exercise) {
     return (
@@ -40,10 +101,8 @@ export default function ExerciseDetailScreen() {
   };
 
   const categoryColors: Record<string, string> = {
-    Cardio: '#06B6D4',
     Fuerza: '#F97316',
-    Técnica: '#10B981',
-    Movilidad: '#EC4899',
+    Core: '#10B981',
   };
 
   const handleStart = () => {
@@ -54,8 +113,27 @@ export default function ExerciseDetailScreen() {
     setIsRunning(false);
     setShowCelebration(true);
 
-    // Sumar XP - usar solo el XP del ejercicio
-    addXP(exercise.xp, `Ejercicio: ${exercise.name}`);
+    // Sumar XP - doble si es ejercicio del día
+    const xpToAdd = exercise.xp * xpMultiplier;
+    const xpLabel = isDaily
+      ? `Misión Diaria: ${exercise.name} (x2 XP!)`
+      : `Ejercicio: ${exercise.name}`;
+    addXP(xpToAdd, xpLabel);
+
+    // TODO: Registrar en DB
+    // TODO: Verificar logros
+  };
+
+  const handleFinish = () => {
+    setIsRunning(false);
+    setShowCelebration(true);
+
+    // Sumar XP - doble si es ejercicio del día
+    const xpToAdd = exercise.xp * xpMultiplier;
+    const xpLabel = isDaily
+      ? `Misión Diaria: ${exercise.name} (x2 XP!)`
+      : `Ejercicio: ${exercise.name}`;
+    addXP(xpToAdd, xpLabel);
 
     // TODO: Registrar en DB
     // TODO: Verificar logros
@@ -109,8 +187,46 @@ export default function ExerciseDetailScreen() {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
+        {/* Exercise Image */}
+        {exerciseImage && (
+          <View style={styles.imageCard}>
+            <Image source={exerciseImage} style={styles.exerciseImage} resizeMode="cover" />
+            <LinearGradient
+              colors={['transparent', 'rgba(0,0,0,0.7)']}
+              style={styles.imageGradient}
+            />
+          </View>
+        )}
+
         <PanelCard variant="elevated">
           <Text style={theme.text.h1}>{exercise.name}</Text>
+
+          {/* Badge de Ejercicio del Día */}
+          {isDaily && (
+            <Animated.View
+              style={[
+                styles.dailyBadgeContainer,
+                {
+                  transform: [{ scale: pulseAnim }],
+                  opacity: glowAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.8, 1],
+                  }),
+                },
+              ]}
+            >
+              <LinearGradient
+                colors={['#FFD700', '#FFA500', '#FF6347']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.dailyBadge}
+              >
+                <Text style={styles.dailyBadgeIcon}>⭐</Text>
+                <Text style={styles.dailyBadgeText}>MISIÓN DIARIA</Text>
+                <Text style={styles.dailyBadgeXP}>DOBLE XP</Text>
+              </LinearGradient>
+            </Animated.View>
+          )}
 
           <View style={styles.muscleRow}>
             <Text style={styles.metaIcon}>💪</Text>
@@ -125,11 +241,13 @@ export default function ExerciseDetailScreen() {
 
             <View style={styles.metaItem}>
               <Text style={styles.metaIcon}>⚡</Text>
-              <Text style={theme.text.body}>{exercise.xp} XP</Text>
+              <Text style={theme.text.body}>
+                {displayXP} XP{isDaily && ' x2'}
+              </Text>
             </View>
           </View>
 
-          <Text style={[theme.text.body, styles.description]}>{exercise.description}</Text>
+          <MarkdownText>{exercise.description}</MarkdownText>
 
           {/* Badges Row - Bottom */}
           <View style={styles.badgesRow}>
@@ -152,6 +270,7 @@ export default function ExerciseDetailScreen() {
               durationSeconds={exercise.duration}
               isRunning={isRunning}
               onComplete={handleComplete}
+              onFinish={handleFinish}
             />
           </PanelCard>
         ) : (
@@ -233,6 +352,24 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     gap: theme.spacing.md,
   },
+  imageCard: {
+    height: 240,
+    borderRadius: theme.borderRadius.lg,
+    overflow: 'hidden',
+    ...theme.shadows.md,
+    marginBottom: theme.spacing.sm,
+  },
+  exerciseImage: {
+    width: '100%',
+    height: '100%',
+  },
+  imageGradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '50%',
+  },
   muscleRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -292,5 +429,47 @@ const styles = StyleSheet.create({
   startButtonText: {
     color: theme.colors.ink,
     ...theme.typography.button,
+  },
+  dailyBadgeContainer: {
+    marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
+  },
+  dailyBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: theme.borderRadius.md,
+    gap: 8,
+    shadowColor: '#FFD700',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  dailyBadgeIcon: {
+    fontSize: 20,
+  },
+  dailyBadgeText: {
+    ...theme.typography.h4,
+    color: '#0F172A',
+    fontWeight: '800',
+    fontSize: 14,
+    letterSpacing: 1.2,
+  },
+  dailyBadgeXP: {
+    ...theme.typography.caption,
+    color: '#0F172A',
+    fontWeight: '900',
+    fontSize: 11,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: theme.borderRadius.sm,
+    letterSpacing: 0.8,
   },
 });

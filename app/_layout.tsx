@@ -2,7 +2,7 @@
  * Root Layout - Configuración global de la app
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -22,11 +22,12 @@ import { useEventStore } from '@/store/useEventStore';
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import * as Notifications from 'expo-notifications';
 
 const queryClient = new QueryClient();
 
 function NavigationHandler({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAuth((state) => state.isAuthenticated);
   const router = useRouter();
   const segments = useSegments();
 
@@ -52,6 +53,7 @@ export default function RootLayout() {
     ...Ionicons.font,
     ...MaterialCommunityIcons.font,
   });
+  const router = useRouter();
 
   // Event listeners para celebraciones
   const soundEnabled = useAppStore((state) => state.soundEnabled);
@@ -76,8 +78,8 @@ export default function RootLayout() {
           await requestNotificationPermissions();
           // Restaurar notificaciones programadas basadas en configuración guardada
           // Nota: restoreNotificationsFromSettings() tiene protección interna contra
-          // ejecuciones múltiples (flag global) para evitar notificaciones duplicadas
-          // especialmente durante Hot Reload en desarrollo
+          // ejecuciones múltiples (flag global + timestamp persistente) para evitar
+          // notificaciones duplicadas especialmente durante Hot Reload o reaperturas de la app
           await restoreNotificationsFromSettings();
           console.log('[App] Notificaciones inicializadas y restauradas');
         } catch (notifError) {
@@ -94,6 +96,66 @@ export default function RootLayout() {
 
     init();
   }, []);
+
+  // Listener para manejar clics en notificaciones
+  const isAuthenticatedForNotifications = useAuth((state) => state.isAuthenticated);
+  useEffect(() => {
+    // Función para manejar la navegación según el tipo de notificación
+    const handleNotificationNavigation = (data: any) => {
+      if (!isAuthenticatedForNotifications) {
+        console.log('[Notificaciones] Usuario no autenticado, ignorando navegación');
+        return;
+      }
+
+      const { type } = data;
+
+      switch (type) {
+        case 'water_reminder':
+        case 'exercise_reminder':
+        case 'bedtime_reminder':
+        case 'posture_reminder':
+        case 'eye_rest_reminder':
+        case 'meditation_reminder':
+        case 'meal_reminder':
+          // Redirigir a la pantalla principal de ejercicios
+          router.push('/(tabs)/exercises');
+          break;
+
+        case 'achievement':
+          // Redirigir a la pantalla de logros
+          router.push('/(tabs)/profile/achievements');
+          break;
+
+        case 'level_up':
+          // Redirigir al perfil donde se muestra el nivel
+          router.push('/(tabs)/profile');
+          break;
+
+        case 'streak':
+          // Redirigir a la pantalla principal
+          router.push('/(tabs)');
+          break;
+
+        default:
+          // Si no se reconoce el tipo, abrir la app en la pantalla principal
+          router.push('/(tabs)');
+          break;
+      }
+    };
+
+    // Listener para cuando el usuario presiona una notificación
+    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+      const { data } = response.notification.request.content;
+      console.log('[Notificaciones] Notificación presionada:', data);
+
+      // Navegar según el tipo de notificación
+      handleNotificationNavigation(data);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [isAuthenticatedForNotifications, router]);
 
   if (!isReady || !fontsLoaded || showSplash) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;

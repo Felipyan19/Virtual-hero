@@ -4,7 +4,7 @@
     "slug": "virtual-hero",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/silueta-hero-login.png",
     "userInterfaceStyle": "light",
     "scheme": "virtualhero",
     "splash": {
@@ -28,7 +28,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/silueta-hero-login.png",
         "backgroundColor": "#6D28D9"
       },
       "package": "com.virtualhero.virtualhero",
@@ -49,9 +49,11 @@
         "expo-notifications",
         {
           "icon": "./assets/notification-icon.png",
-          "color": "#6D28D9"
+          "color": "#6D28D9",
+          "sounds": []
         }
-      ]
+      ],
+      "expo-audio"
     ],
     "experiments": {
       "typedRoutes": true

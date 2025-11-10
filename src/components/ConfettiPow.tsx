@@ -76,7 +76,16 @@ const CONFETTI_COLORS: Record<ConfettiType, string[]> = {
   [ConfettiType.EXERCISE]: ['#6D28D9', '#2563EB', '#10B981', '#FACC15', '#DC2626'],
   [ConfettiType.LEVEL_UP]: ['#F59E0B', '#FBBF24', '#FCD34D', '#FDE047', '#FACC15'],
   [ConfettiType.GOAL]: ['#06B6D4', '#0EA5E9', '#3B82F6', '#6366F1', '#8B5CF6'],
-  [ConfettiType.SPECIAL]: ['#EF4444', '#F59E0B', '#FACC15', '#10B981', '#06B6D4', '#6366F1', '#8B5CF6', '#EC4899'],
+  [ConfettiType.SPECIAL]: [
+    '#EF4444',
+    '#F59E0B',
+    '#FACC15',
+    '#10B981',
+    '#06B6D4',
+    '#6366F1',
+    '#8B5CF6',
+    '#EC4899',
+  ],
   [ConfettiType.STREAK]: ['#DC2626', '#EF4444', '#F97316', '#FB923C', '#FDBA74'],
   [ConfettiType.ACHIEVEMENT]: ['#6D28D9', '#2563EB', '#10B981', '#FACC15', '#DC2626'], // Por defecto, se reemplaza por rareza
 };

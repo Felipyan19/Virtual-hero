@@ -1,6 +1,10 @@
 /**
  * Notifications - Sistema de notificaciones locales
  * Manejo de recordatorios de hidratación y otras notificaciones
+ *
+ * NOTA: En Expo Go SDK 53+, verás un error sobre push notifications remotas.
+ * Esto es esperado y no afecta las notificaciones locales que usa esta app.
+ * Para usar push notifications remotas, necesitas un development build.
  */
 
 import * as Notifications from 'expo-notifications';
@@ -670,18 +674,47 @@ export const cancelAllHealthReminders = async (): Promise<void> => {
  */
 export const restoreNotificationsFromSettings = async (): Promise<void> => {
   try {
-    // Evitar inicialización múltiple (especialmente en desarrollo con Hot Reload)
+    // Importar AsyncStorage dinámicamente para evitar errores de dependencia circular
+    const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+
+    // Verificar última inicialización usando AsyncStorage (persistente entre sesiones)
+    const LAST_INIT_KEY = 'notifications_last_initialized';
+    const lastInitTimestamp = await AsyncStorage.getItem(LAST_INIT_KEY);
+    const now = Date.now();
+
+    // Si se inicializó en las últimas 24 horas, no volver a inicializar
+    if (lastInitTimestamp) {
+      const timeSinceLastInit = now - parseInt(lastInitTimestamp, 10);
+      const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+
+      if (timeSinceLastInit < TWENTY_FOUR_HOURS) {
+        console.log('[Notificaciones] Ya inicializadas recientemente, omitiendo restauración');
+        notificationsInitialized = true;
+        return;
+      }
+    }
+
+    // Evitar inicialización múltiple en la misma sesión
     if (notificationsInitialized) {
-      console.log('[Notificaciones] Ya inicializadas, omitiendo restauración');
+      console.log('[Notificaciones] Ya inicializadas en esta sesión, omitiendo');
       return;
     }
 
-    // Cancelar todas las notificaciones existentes primero para evitar duplicados
+    // Verificar si hay notificaciones programadas
+    const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
+
+    // Si hay notificaciones programadas y se inicializó recientemente, no hacer nada
+    if (scheduledNotifications.length > 0 && lastInitTimestamp) {
+      console.log(
+        `[Notificaciones] ${scheduledNotifications.length} notificaciones ya programadas, omitiendo`
+      );
+      notificationsInitialized = true;
+      return;
+    }
+
+    // Cancelar todas las notificaciones existentes solo si vamos a reprogramar
     console.log('[Notificaciones] Limpiando notificaciones previas...');
     await Notifications.cancelAllScheduledNotificationsAsync();
-
-    // Importar AsyncStorage dinámicamente para evitar errores de dependencia circular
-    const AsyncStorage = require('@react-native-async-storage/async-storage').default;
 
     const STORAGE_KEYS = {
       WATER_REMINDERS: 'notifications_water_enabled',
@@ -723,6 +756,9 @@ export const restoreNotificationsFromSettings = async (): Promise<void> => {
       }
     }
 
+    // Guardar timestamp de inicialización
+    await AsyncStorage.setItem(LAST_INIT_KEY, now.toString());
+
     // Marcar como inicializado
     notificationsInitialized = true;
     console.log('[Notificaciones] Notificaciones restauradas desde configuración');
@@ -745,8 +781,22 @@ export const clearAllNotifications = async (): Promise<void> => {
 
 /**
  * Resetear el flag de inicialización (útil para testing o cuando el usuario cambia configuraciones)
+ * IMPORTANTE: Llama esta función cuando el usuario cambie configuraciones de notificaciones
+ * para forzar una re-inicialización inmediata
  */
-export const resetNotificationsInitialization = (): void => {
-  notificationsInitialized = false;
-  console.log('[Notificaciones] Flag de inicialización reseteado');
+export const resetNotificationsInitialization = async (): Promise<void> => {
+  try {
+    const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+    const LAST_INIT_KEY = 'notifications_last_initialized';
+
+    // Resetear flag en memoria
+    notificationsInitialized = false;
+
+    // Eliminar timestamp de AsyncStorage para forzar re-inicialización
+    await AsyncStorage.removeItem(LAST_INIT_KEY);
+
+    console.log('[Notificaciones] Flag de inicialización reseteado');
+  } catch (error) {
+    console.error('[Notificaciones] Error al resetear inicialización:', error);
+  }
 };

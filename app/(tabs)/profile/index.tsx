@@ -42,6 +42,7 @@ export default function ProfileScreen() {
   const { dailyGoalSteps, setDailyGoal: setStepsGoal } = useSteps();
   const {
     dailyGoalML,
+    cupSizeML,
     reminderEnabled,
     toggleReminder,
     setDailyGoal: setWaterGoal,
@@ -78,7 +79,9 @@ export default function ProfileScreen() {
     if (goalType === 'steps') {
       setEditValue(dailyGoalSteps.toString());
     } else if (goalType === 'water') {
-      setEditValue(dailyGoalML.toString());
+      // Convertir ml a vasos
+      const cups = Math.ceil(dailyGoalML / cupSizeML);
+      setEditValue(cups.toString());
     } else if (goalType === 'sleep') {
       setEditValue(Math.floor(targetSleepMinutes / 60).toString());
     }
@@ -101,12 +104,15 @@ export default function ProfileScreen() {
       setStepsGoal(numValue);
       Alert.alert('Éxito', `Meta de pasos actualizada a ${numValue.toLocaleString()}`);
     } else if (editingGoal === 'water') {
-      if (numValue < 500 || numValue > 5000) {
-        Alert.alert('Error', 'La meta de agua debe estar entre 500ml y 5,000ml');
+      // Validar vasos (entre 2 y 20 vasos)
+      if (numValue < 2 || numValue > 20) {
+        Alert.alert('Error', 'La meta de agua debe estar entre 2 y 20 vasos');
         return;
       }
-      setWaterGoal(numValue);
-      Alert.alert('Éxito', `Meta de agua actualizada a ${numValue}ml`);
+      // Convertir vasos a ml
+      const mlValue = numValue * cupSizeML;
+      setWaterGoal(mlValue);
+      Alert.alert('Éxito', `Meta de agua actualizada a ${numValue} vasos (${mlValue}ml)`);
     } else if (editingGoal === 'sleep') {
       const minutes = numValue * 60;
       if (minutes < 240 || minutes > 720) {
@@ -124,21 +130,21 @@ export default function ProfileScreen() {
 
   const getGoalLabel = () => {
     if (editingGoal === 'steps') return 'Pasos diarios';
-    if (editingGoal === 'water') return 'Agua diaria (ml)';
+    if (editingGoal === 'water') return 'Vasos de agua por día';
     if (editingGoal === 'sleep') return 'Horas de sueño';
     return '';
   };
 
   const getGoalPlaceholder = () => {
     if (editingGoal === 'steps') return 'Ej: 8000';
-    if (editingGoal === 'water') return 'Ej: 2000';
+    if (editingGoal === 'water') return 'Ej: 8';
     if (editingGoal === 'sleep') return 'Ej: 8';
     return '';
   };
 
   const getGoalHelper = () => {
     if (editingGoal === 'steps') return 'Rango: 1,000 - 30,000 pasos';
-    if (editingGoal === 'water') return 'Rango: 500 - 5,000 ml';
+    if (editingGoal === 'water') return `Rango: 2 - 20 vasos (${cupSizeML}ml por vaso)`;
     if (editingGoal === 'sleep') return 'Rango: 4 - 12 horas';
     return '';
   };
@@ -189,7 +195,12 @@ export default function ProfileScreen() {
 
         {/* Metas configuradas */}
         <PanelCard style={styles.card}>
-          <Text style={theme.text.h3}>🎯 Metas Diarias</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={theme.text.h3}>🎯 Metas Diarias</Text>
+            <Text style={[theme.text.caption, theme.text.muted]}>
+              Toca para ajustar tus objetivos
+            </Text>
+          </View>
 
           <View style={styles.goalsList}>
             <TouchableOpacity
@@ -198,7 +209,15 @@ export default function ProfileScreen() {
               activeOpacity={0.7}
             >
               <View style={styles.goalItemContent}>
-                <Text style={theme.text.body}>👟 Pasos</Text>
+                <View style={styles.goalItemLeft}>
+                  <Text style={styles.goalEmoji}>👟</Text>
+                  <View>
+                    <Text style={theme.text.body}>Pasos Diarios</Text>
+                    <Text style={[theme.text.caption, theme.text.muted]}>
+                      Meta de actividad física
+                    </Text>
+                  </View>
+                </View>
                 <View style={styles.goalValueContainer}>
                   <Text style={[theme.text.body, theme.text.bold]}>
                     {dailyGoalSteps.toLocaleString()}
@@ -214,9 +233,19 @@ export default function ProfileScreen() {
               activeOpacity={0.7}
             >
               <View style={styles.goalItemContent}>
-                <Text style={theme.text.body}>💧 Agua</Text>
+                <View style={styles.goalItemLeft}>
+                  <Text style={styles.goalEmoji}>💧</Text>
+                  <View>
+                    <Text style={theme.text.body}>Agua Diaria</Text>
+                    <Text style={[theme.text.caption, theme.text.muted]}>
+                      {Math.ceil(dailyGoalML / cupSizeML)} vasos ({dailyGoalML}ml)
+                    </Text>
+                  </View>
+                </View>
                 <View style={styles.goalValueContainer}>
-                  <Text style={[theme.text.body, theme.text.bold]}>{dailyGoalML}ml</Text>
+                  <Text style={[theme.text.body, theme.text.bold]}>
+                    {Math.ceil(dailyGoalML / cupSizeML)} vasos
+                  </Text>
                   <Text style={styles.editIcon}>✏️</Text>
                 </View>
               </View>
@@ -228,7 +257,13 @@ export default function ProfileScreen() {
               activeOpacity={0.7}
             >
               <View style={styles.goalItemContent}>
-                <Text style={theme.text.body}>😴 Sueño</Text>
+                <View style={styles.goalItemLeft}>
+                  <Text style={styles.goalEmoji}>😴</Text>
+                  <View>
+                    <Text style={theme.text.body}>Sueño Nocturno</Text>
+                    <Text style={[theme.text.caption, theme.text.muted]}>Meta de descanso</Text>
+                  </View>
+                </View>
                 <View style={styles.goalValueContainer}>
                   <Text style={[theme.text.body, theme.text.bold]}>
                     {Math.floor(targetSleepMinutes / 60)}h
@@ -439,19 +474,34 @@ const styles = StyleSheet.create({
     color: theme.colors.paper,
     opacity: 0.9,
   },
+  sectionHeader: {
+    gap: 4,
+  },
   goalsList: {
     marginTop: theme.spacing.md,
-    gap: theme.spacing.sm,
+    gap: theme.spacing.md,
   },
   goalItem: {
-    paddingVertical: theme.spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.gray200,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.sm,
+    borderWidth: theme.borderWidth.thin,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.paperLight,
   },
   goalItemContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  goalItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    flex: 1,
+  },
+  goalEmoji: {
+    fontSize: 28,
   },
   goalValueContainer: {
     flexDirection: 'row',

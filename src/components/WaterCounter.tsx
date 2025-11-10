@@ -45,15 +45,31 @@ export const WaterCounter: React.FC<WaterCounterProps> = ({
       </View>
 
       <View style={styles.stats}>
-        <Text style={styles.count}>{cupsConsumed}</Text>
-        <Text style={styles.goal}>/ {Math.ceil(goalML / cupSize)} Vasos</Text>
+        <Text style={styles.count}>
+          <Text style={styles.countCurrent}>{cupsConsumed}</Text>
+          <Text style={styles.countGoal}> / {Math.ceil(goalML / cupSize)}</Text>
+        </Text>
+      </View>
+
+      {/* Indicador de meta en ML */}
+      <View style={styles.progressContainer}>
+        <Text style={styles.progressText}>
+          {currentML}ml / {goalML}ml
+        </Text>
+        <View style={styles.progressBar}>
+          <View style={[styles.progressFill, { width: `${progress}%` }]} />
+        </View>
       </View>
 
       {/* Botón para agregar vaso */}
       <Animated.View style={animatedStyle}>
-        <TouchableOpacity style={styles.button} onPress={handlePress} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={[styles.button, goalMet && styles.buttonSuccess]}
+          onPress={handlePress}
+          activeOpacity={0.8}
+        >
           <Text style={styles.buttonIcon}>💧</Text>
-          <Text style={styles.buttonText}>Agregar Vaso</Text>
+          <Text style={styles.buttonText}>{goalMet ? '¡Meta Cumplida!' : 'Agregar Vaso'}</Text>
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -89,12 +105,40 @@ const styles = StyleSheet.create({
   count: {
     fontSize: 36,
     fontWeight: '900',
-    color: theme.colors.info,
     paddingVertical: theme.spacing.sm,
+  },
+  countCurrent: {
+    color: theme.colors.info,
+  },
+  countGoal: {
+    color: theme.colors.gray600,
   },
   goal: {
     ...theme.typography.caption,
     color: theme.colors.gray600,
+  },
+  progressContainer: {
+    width: '100%',
+    gap: theme.spacing.xs,
+    alignItems: 'center',
+  },
+  progressText: {
+    ...theme.typography.caption,
+    color: theme.colors.gray600,
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  progressBar: {
+    width: '100%',
+    height: 6,
+    backgroundColor: theme.colors.gray800,
+    borderRadius: theme.borderRadius.round,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#06B6D4',
+    borderRadius: theme.borderRadius.round,
   },
   button: {
     flexDirection: 'row',
@@ -106,6 +150,9 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.sm,
     borderWidth: theme.borderWidth.thin,
     borderColor: theme.colors.border,
+  },
+  buttonSuccess: {
+    backgroundColor: '#10B981',
   },
   buttonIcon: {
     fontSize: 14,

@@ -3,7 +3,7 @@
  * Maneja reproducción de sonidos con soporte para configuración de usuario
  */
 
-import { Audio } from 'expo-av';
+import { AudioPlayer, AudioSource, useAudioPlayer } from 'expo-audio';
 
 export enum SoundEffect {
   LEVEL_UP = 'level-up',
@@ -16,8 +16,8 @@ export enum SoundEffect {
   EXERCISE_COMPLETE = 'exercise-complete',
 }
 
-// Caché de sonidos cargados
-const soundCache: Map<SoundEffect, Audio.Sound> = new Map();
+// Caché de players de audio
+const playerCache: Map<SoundEffect, AudioPlayer> = new Map();
 let isInitialized = false;
 
 /**
@@ -25,11 +25,8 @@ let isInitialized = false;
  */
 export const initSounds = async (): Promise<void> => {
   try {
-    await Audio.setAudioModeAsync({
-      playsInSilentModeIOS: false,
-      staysActiveInBackground: false,
-      shouldDuckAndroid: true,
-    });
+    // expo-audio no requiere configuración inicial como expo-av
+    // La configuración se maneja automáticamente
     isInitialized = true;
     console.log('[Sounds] Sistema de audio inicializado');
   } catch (error) {
@@ -41,14 +38,14 @@ export const initSounds = async (): Promise<void> => {
  * Cargar un sonido en caché
  * Por ahora, los sonidos no están disponibles, así que usamos efectos de vibración
  */
-const loadSound = async (effect: SoundEffect): Promise<Audio.Sound | null> => {
+const loadSound = async (effect: SoundEffect): Promise<AudioPlayer | null> => {
   try {
     // TODO: Reemplazar con archivos de audio reales cuando estén disponibles
-    // const { sound } = await Audio.Sound.createAsync(
-    //   require(`../../assets/sounds/${effect}.mp3`)
+    // const player = new AudioPlayer(
+    //   require(`../../assets/sounds/${effect}.mp3`) as AudioSource
     // );
-    // soundCache.set(effect, sound);
-    // return sound;
+    // playerCache.set(effect, player);
+    // return player;
 
     console.log(`[Sounds] Sonido ${effect} - archivos de audio aún no disponibles`);
     return null;
@@ -77,17 +74,16 @@ export const playSound = async (
     console.log(`[Sounds] 🔊 Reproduciendo: ${effect}`);
 
     // TODO: Implementar reproducción real cuando los archivos estén disponibles
-    // let sound = soundCache.get(effect);
+    // let player = playerCache.get(effect);
     //
-    // if (!sound) {
-    //   sound = await loadSound(effect);
-    //   if (!sound) return;
+    // if (!player) {
+    //   player = await loadSound(effect);
+    //   if (!player) return;
     // }
     //
-    // await sound.setVolumeAsync(options?.volume ?? 1.0);
-    // await sound.setRateAsync(options?.rate ?? 1.0, true);
-    // await sound.replayAsync();
-
+    // player.volume = options?.volume ?? 1.0;
+    // player.playbackRate = options?.rate ?? 1.0;
+    // player.play();
   } catch (error) {
     console.error(`[Sounds] Error reproduciendo ${effect}:`, error);
   }
@@ -98,8 +94,8 @@ export const playSound = async (
  */
 export const stopAllSounds = async (): Promise<void> => {
   try {
-    for (const [effect, sound] of soundCache.entries()) {
-      await sound.stopAsync();
+    for (const [effect, player] of playerCache.entries()) {
+      player.pause();
       console.log(`[Sounds] Detenido: ${effect}`);
     }
   } catch (error) {
@@ -112,11 +108,11 @@ export const stopAllSounds = async (): Promise<void> => {
  */
 export const unloadSounds = async (): Promise<void> => {
   try {
-    for (const [effect, sound] of soundCache.entries()) {
-      await sound.unloadAsync();
+    for (const [effect, player] of playerCache.entries()) {
+      player.remove();
       console.log(`[Sounds] Descargado: ${effect}`);
     }
-    soundCache.clear();
+    playerCache.clear();
   } catch (error) {
     console.error('[Sounds] Error descargando sonidos:', error);
   }

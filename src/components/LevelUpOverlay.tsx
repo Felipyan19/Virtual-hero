@@ -48,10 +48,7 @@ export const LevelUpOverlay: React.FC<LevelUpOverlayProps> = ({
 
       // Animaciones
       opacity.value = withTiming(1, { duration: 200 });
-      scale.value = withSequence(
-        withSpring(1.15, { damping: 6 }),
-        withSpring(1, { damping: 10 })
-      );
+      scale.value = withSequence(withSpring(1.15, { damping: 6 }), withSpring(1, { damping: 10 }));
 
       // Estrella giratoria
       starRotation.value = withRepeat(
@@ -62,20 +59,14 @@ export const LevelUpOverlay: React.FC<LevelUpOverlayProps> = ({
 
       // Pulso de la estrella
       starScale.value = withRepeat(
-        withSequence(
-          withTiming(1.2, { duration: 600 }),
-          withTiming(1, { duration: 600 })
-        ),
+        withSequence(withTiming(1.2, { duration: 600 }), withTiming(1, { duration: 600 })),
         -1,
         true
       );
 
       // Brillo de fondo
       glowOpacity.value = withRepeat(
-        withSequence(
-          withTiming(0.4, { duration: 800 }),
-          withTiming(0.2, { duration: 800 })
-        ),
+        withSequence(withTiming(0.4, { duration: 800 }), withTiming(0.2, { duration: 800 })),
         -1,
         true
       );
@@ -94,10 +85,7 @@ export const LevelUpOverlay: React.FC<LevelUpOverlayProps> = ({
   }));
 
   const starStyle = useAnimatedStyle(() => ({
-    transform: [
-      { rotate: `${starRotation.value}deg` },
-      { scale: starScale.value },
-    ],
+    transform: [{ rotate: `${starRotation.value}deg` }, { scale: starScale.value }],
   }));
 
   const glowStyle = useAnimatedStyle(() => ({
@@ -111,12 +99,7 @@ export const LevelUpOverlay: React.FC<LevelUpOverlayProps> = ({
   const isSpecialLevel = level % 5 === 0;
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="none"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
       <View style={styles.overlay}>
         <ConfettiPow
           visible={visible}
@@ -162,9 +145,7 @@ export const LevelUpOverlay: React.FC<LevelUpOverlayProps> = ({
             )}
 
             <TouchableOpacity style={styles.button} onPress={onClose} activeOpacity={0.8}>
-              <Text style={styles.buttonText}>
-                {isSpecialLevel ? '¡ÉPICO!' : '¡CONTINUAR!'}
-              </Text>
+              <Text style={styles.buttonText}>{isSpecialLevel ? '¡ÉPICO!' : '¡CONTINUAR!'}</Text>
             </TouchableOpacity>
           </LinearGradient>
         </Animated.View>

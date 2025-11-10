@@ -14,28 +14,48 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import theme from '@/theme/theme';
-import { ExerciseTile, Exercise, ExerciseCategory } from '@/components/ExerciseTile';
+import { ExerciseTile, Exercise } from '@/components/ExerciseTile';
 import exercisesData from '@/data/exercises.json';
+
+type FilterType = 'category' | 'muscle';
 
 type FilterChip = {
   label: string;
-  value: ExerciseCategory | 'Todos';
+  value: string;
   icon: string;
   color: string;
+  type: FilterType;
 };
 
 const FILTER_CHIPS: FilterChip[] = [
-  { label: 'Todos', value: 'Todos', icon: '⚡', color: '#06B6D4' },
-  { label: 'Cardio', value: 'Cardio', icon: '💙', color: '#06B6D4' },
-  { label: 'Fuerza', value: 'Fuerza', icon: '💪', color: '#06B6D4' },
-  { label: 'Técnica', value: 'Técnica', icon: '🎯', color: '#06B6D4' },
-  { label: 'Movilidad', value: 'Movilidad', icon: '🌀', color: '#06B6D4' },
+  // Categorías
+  { label: 'Todos', value: 'Todos', icon: '⚡', color: '#06B6D4', type: 'category' },
+  { label: 'Fuerza', value: 'Fuerza', icon: '💪', color: '#F97316', type: 'category' },
+  { label: 'Core', value: 'Core', icon: '🔥', color: '#10B981', type: 'category' },
+
+  // Grupos musculares - Tren Superior
+  { label: 'Pecho', value: 'Pecho', icon: '🦾', color: '#EC4899', type: 'muscle' },
+  { label: 'Espalda', value: 'Espalda', icon: '🛡️', color: '#8B5CF6', type: 'muscle' },
+  { label: 'Dorsales', value: 'Dorsal', icon: '🏋️', color: '#7C3AED', type: 'muscle' },
+  { label: 'Bíceps', value: 'Bíceps', icon: '💪', color: '#3B82F6', type: 'muscle' },
+  { label: 'Tríceps', value: 'Tríceps', icon: '🔱', color: '#14B8A6', type: 'muscle' },
+  { label: 'Deltoides', value: 'Deltoides', icon: '🎯', color: '#F59E0B', type: 'muscle' },
+
+  // Grupos musculares - Core
+  { label: 'Abdominales', value: 'Abdominales', icon: '🔥', color: '#10B981', type: 'muscle' },
+
+  // Grupos musculares - Tren Inferior
+  { label: 'Cuádriceps', value: 'Cuádriceps', icon: '🦵', color: '#EF4444', type: 'muscle' },
+  { label: 'Isquios', value: 'Isquiotibiales', icon: '🦴', color: '#DC2626', type: 'muscle' },
+  { label: 'Glúteos', value: 'Glúteos', icon: '🍑', color: '#F97316', type: 'muscle' },
+  { label: 'Gemelos', value: 'Gemelos', icon: '🦶', color: '#EA580C', type: 'muscle' },
 ];
 
 export default function ExercisesScreen() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<ExerciseCategory | 'Todos'>('Todos');
+  const [selectedFilter, setSelectedFilter] = useState<string>('Todos');
+  const [selectedFilterType, setSelectedFilterType] = useState<FilterType>('category');
   const [scaleAnim] = useState(new Animated.Value(1));
 
   const exercises: Exercise[] = exercisesData as Exercise[];
@@ -43,9 +63,16 @@ export default function ExercisesScreen() {
   const filteredExercises = useMemo(() => {
     let result = exercises;
 
-    // Filter by category
-    if (selectedCategory !== 'Todos') {
-      result = result.filter((ex) => ex.category === selectedCategory);
+    // Filter by category or muscle
+    if (selectedFilter !== 'Todos') {
+      if (selectedFilterType === 'category') {
+        result = result.filter((ex) => ex.category === selectedFilter);
+      } else {
+        // Filter by muscle group
+        result = result.filter((ex) =>
+          ex.muscle.toLowerCase().includes(selectedFilter.toLowerCase())
+        );
+      }
     }
 
     // Filter by search query
@@ -60,10 +87,11 @@ export default function ExercisesScreen() {
     }
 
     return result;
-  }, [exercises, selectedCategory, searchQuery]);
+  }, [exercises, selectedFilter, selectedFilterType, searchQuery]);
 
-  const handleCategoryPress = (category: ExerciseCategory | 'Todos') => {
-    setSelectedCategory(category);
+  const handleFilterPress = (value: string, type: FilterType) => {
+    setSelectedFilter(value);
+    setSelectedFilterType(type);
     Animated.sequence([
       Animated.timing(scaleAnim, {
         toValue: 0.95,
@@ -109,7 +137,7 @@ export default function ExercisesScreen() {
           )}
         </View>
 
-        {/* Category Filters */}
+        {/* Category and Muscle Filters */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -117,15 +145,15 @@ export default function ExercisesScreen() {
           contentContainerStyle={styles.filtersContent}
         >
           {FILTER_CHIPS.map((chip) => {
-            const isActive = selectedCategory === chip.value;
+            const isActive = selectedFilter === chip.value && selectedFilterType === chip.type;
             return (
               <TouchableOpacity
-                key={chip.value}
+                key={`${chip.type}-${chip.value}`}
                 style={[
                   styles.filterChip,
                   isActive && { backgroundColor: chip.color, borderColor: chip.color },
                 ]}
-                onPress={() => handleCategoryPress(chip.value)}
+                onPress={() => handleFilterPress(chip.value, chip.type)}
                 activeOpacity={0.7}
               >
                 <Text style={styles.chipIcon}>{chip.icon}</Text>

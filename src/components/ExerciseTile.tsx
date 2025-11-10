@@ -3,11 +3,12 @@
  */
 
 import React, { useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Image } from 'react-native';
 import { BadgeSticker } from './BadgeSticker';
 import theme from '@/theme/theme';
+import { getExerciseImage } from '@/lib/exerciseImages';
 
-export type ExerciseCategory = 'Cardio' | 'Fuerza' | 'Técnica' | 'Movilidad';
+export type ExerciseCategory = 'Fuerza' | 'Core';
 
 export interface Exercise {
   id: string;
@@ -53,13 +54,12 @@ export const ExerciseTile: React.FC<ExerciseTileProps> = ({ exercise, onPress })
   };
 
   const categoryColors: Record<ExerciseCategory, string> = {
-    Cardio: '#06B6D4',
     Fuerza: '#F97316',
-    Técnica: '#10B981',
-    Movilidad: '#EC4899',
+    Core: '#10B981',
   };
 
   const categoryColor = categoryColors[exercise.category];
+  const exerciseImage = getExerciseImage(exercise.id);
 
   return (
     <Animated.View
@@ -69,6 +69,14 @@ export const ExerciseTile: React.FC<ExerciseTileProps> = ({ exercise, onPress })
       }}
     >
       <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.8}>
+        {/* Exercise Image */}
+        {exerciseImage && (
+          <View style={styles.imageContainer}>
+            <Image source={exerciseImage} style={styles.exerciseImage} resizeMode="cover" />
+            <View style={styles.imageOverlay} />
+          </View>
+        )}
+
         <View style={styles.content}>
           {/* Exercise Name */}
           <Text style={styles.exerciseName} numberOfLines={2}>
@@ -112,13 +120,36 @@ export const ExerciseTile: React.FC<ExerciseTileProps> = ({ exercise, onPress })
 const styles = StyleSheet.create({
   container: {
     ...theme.comicPanel.base,
-    padding: theme.spacing.md,
+    padding: 0,
     position: 'relative',
     height: 200,
+    overflow: 'hidden',
+  },
+  imageContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  exerciseImage: {
+    width: '100%',
+    height: '100%',
+  },
+  imageOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   content: {
     flex: 1,
     justifyContent: 'space-between',
+    padding: theme.spacing.md,
+    position: 'relative',
+    zIndex: 1,
   },
   badgesRow: {
     flexDirection: 'row',
@@ -140,15 +171,21 @@ const styles = StyleSheet.create({
   exerciseName: {
     fontSize: 16,
     fontWeight: '700',
-    color: theme.colors.ink,
+    color: '#FFFFFF',
     height: 40,
     lineHeight: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.85)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 4,
   },
   muscleText: {
     ...theme.typography.bodySmall,
-    color: theme.colors.gray600,
+    color: '#FFFFFF',
     marginTop: 4,
     height: 18,
+    textShadowColor: 'rgba(0, 0, 0, 0.85)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 4,
   },
   statsRow: {
     flexDirection: 'row',
@@ -163,10 +200,16 @@ const styles = StyleSheet.create({
   },
   statIcon: {
     fontSize: 14,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
   statText: {
     ...theme.typography.caption,
-    color: theme.colors.ink,
+    color: '#FFFFFF',
     fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
 });

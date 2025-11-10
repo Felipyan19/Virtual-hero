@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import theme from '@/theme/theme';
 
@@ -11,15 +11,23 @@ interface StepsGaugeProps {
   steps: number;
   goal: number;
   size?: number;
+  isLoading?: boolean;
   onSync?: () => void;
 }
 
-export const StepsGauge: React.FC<StepsGaugeProps> = ({ steps, goal, size = 100, onSync }) => {
+export const StepsGauge: React.FC<StepsGaugeProps> = ({
+  steps,
+  goal,
+  size = 100,
+  isLoading = false,
+  onSync,
+}) => {
   const progress = Math.min((steps / goal) * 100, 100);
   const strokeWidth = 8;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
+  const goalMet = steps >= goal;
 
   return (
     <View style={styles.container}>
@@ -45,7 +53,7 @@ export const StepsGauge: React.FC<StepsGaugeProps> = ({ steps, goal, size = 100,
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke={theme.colors.cyan}
+            stroke={goalMet ? '#10B981' : theme.colors.cyan}
             strokeWidth={strokeWidth}
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
@@ -57,14 +65,32 @@ export const StepsGauge: React.FC<StepsGaugeProps> = ({ steps, goal, size = 100,
         </Svg>
 
         <View style={styles.content}>
-          <Text style={styles.number}>{steps.toLocaleString()}</Text>
+          <Text style={[styles.number, goalMet && styles.numberSuccess]}>
+            {steps.toLocaleString()}
+          </Text>
           <Text style={styles.goalText}>/ {goal.toLocaleString()}</Text>
         </View>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={onSync} activeOpacity={0.8}>
-        <Text style={styles.buttonIcon}>🔄</Text>
-        <Text style={styles.buttonText}>Sincronizar</Text>
+      {goalMet && <Text style={styles.successText}>¡Meta alcanzada! 🎉</Text>}
+
+      <TouchableOpacity
+        style={[styles.button, isLoading && styles.buttonDisabled]}
+        onPress={onSync}
+        activeOpacity={0.8}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <>
+            <ActivityIndicator size="small" color={theme.colors.ink} />
+            <Text style={styles.buttonText}>Sincronizando...</Text>
+          </>
+        ) : (
+          <>
+            <Text style={styles.buttonIcon}>🔄</Text>
+            <Text style={styles.buttonText}>Sincronizar</Text>
+          </>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -107,10 +133,20 @@ const styles = StyleSheet.create({
     color: theme.colors.ink,
     fontWeight: '900',
   },
+  numberSuccess: {
+    color: '#10B981',
+  },
   goalText: {
     ...theme.typography.caption,
     color: theme.colors.gray600,
     fontSize: 10,
+  },
+  successText: {
+    ...theme.typography.caption,
+    color: theme.colors.success,
+    fontSize: 11,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   button: {
     flexDirection: 'row',
@@ -122,6 +158,9 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.sm,
     borderWidth: theme.borderWidth.thin,
     borderColor: theme.colors.border,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
   buttonIcon: {
     fontSize: 14,

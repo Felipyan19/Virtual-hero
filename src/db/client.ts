@@ -142,9 +142,7 @@ export interface DailyLog {
 export const getLog = async (date: string): Promise<DailyLog | null> => {
   try {
     const database = getDB();
-    const result = await database.getFirstAsync('SELECT * FROM daily_logs WHERE date = ?', [
-      date,
-    ]);
+    const result = await database.getFirstAsync('SELECT * FROM daily_logs WHERE date = ?', [date]);
 
     if (!result) {
       return null;

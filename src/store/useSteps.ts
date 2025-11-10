@@ -5,6 +5,11 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  isPedometerAvailable,
+  requestPedometerPermissions,
+  getTodaySteps,
+} from '@/services/pedometerService';
 
 export interface StepsState {
   // Configuración
@@ -112,20 +117,37 @@ export const useSteps = create<StepsState>()(
 
       syncSteps: async () => {
         const state = get();
-
-        if (!state.hasHealthPermission) {
-          console.log('[Pasos] Sin permisos de salud');
-          return;
-        }
-
         state.setLoading(true);
 
         try {
-          // TODO: Implementar lectura real desde HealthKit/Google Fit
-          // const steps = await readStepsFromHealth();
-          // state.updateSteps(steps);
+          // Verificar disponibilidad del pedómetro
+          const available = await isPedometerAvailable();
 
-          console.log('[Pasos] Sincronización pendiente (implementar integración)');
+          if (!available) {
+            console.log('[Pasos] Pedómetro no disponible en este dispositivo');
+            state.setLoading(false);
+            return;
+          }
+
+          // Solicitar permisos si no los tiene
+          if (!state.hasHealthPermission) {
+            const granted = await requestPedometerPermissions();
+            state.setHealthPermission(granted);
+
+            if (!granted) {
+              console.log('[Pasos] Permisos denegados');
+              state.setLoading(false);
+              return;
+            }
+          }
+
+          // Obtener pasos del día
+          const steps = await getTodaySteps();
+
+          // Actualizar el store
+          state.updateSteps(steps);
+
+          console.log(`[Pasos] Sincronización exitosa: ${steps} pasos`);
         } catch (error) {
           console.error('[Pasos] Error al sincronizar:', error);
         } finally {

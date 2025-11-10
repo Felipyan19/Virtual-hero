@@ -1,252 +1,452 @@
 [
   {
-    "id": "push-ups",
+    "id": "flexiones-pecho",
     "name": "Flexiones de Pecho",
     "muscle": "Pecho y Tríceps",
     "category": "Fuerza",
     "difficulty": "medio",
     "duration": 180,
     "xp": 30,
-    "description": "Ejercicio clásico para fortalecer pecho, brazos y core. Mantén el cuerpo recto como una tabla."
+    "description": "Movimiento **clásico** para fortalecer **pecho**, **tríceps** y *core*.\n\n### Técnica Correcta\n\n1. Manos bajo hombros, cuerpo en línea recta\n2. Baja el pecho cerca del suelo manteniendo control\n3. Empuja sin arquear la zona lumbar\n\n### Consejos\n\n> **Tip:** Codos a ~45° respecto al torso para proteger hombros.\n\n### Errores Comunes\n\n❌ Hundir cadera  \n❌ Abrir demasiado los codos  \n❌ Mirar al frente en exceso\n\n**Respiración:** Inhala al bajar, exhala al subir"
   },
   {
-    "id": "squats",
-    "name": "Sentadillas",
-    "muscle": "Piernas y Glúteos",
+    "id": "fondos-pecho",
+    "name": "Fondos (en barras paralelas)",
+    "muscle": "Pecho y Tríceps",
     "category": "Fuerza",
-    "difficulty": "fácil",
-    "duration": 120,
-    "xp": 25,
-    "description": "Fortalece tus piernas y glúteos. Baja hasta que tus muslos estén paralelos al suelo."
+    "difficulty": "difícil",
+    "duration": 240,
+    "xp": 50,
+    "description": "Ejercicio **compuesto** que enfatiza **pecho** inclinando el torso ligeramente hacia adelante.\n\n### Técnica Correcta\n\n1. Hombros deprimidos, agarre firme\n2. Desciende controlado hasta ~90° de codo\n3. Sube extendiendo codos sin bloquear\n\n### Consejos\n\n> Inclina el torso y abre levemente los codos para mayor estímulo en pecho.\n\n### Errores Comunes\n\n❌ Encoger hombros  \n❌ Rebotar en el fondo  \n❌ Bloquear codos fuerte al final\n\n**Respiración:** Inhala al bajar, exhala al subir"
   },
   {
-    "id": "plank",
-    "name": "Plancha",
-    "muscle": "Core",
-    "category": "Técnica",
-    "difficulty": "medio",
-    "duration": 60,
-    "xp": 20,
-    "description": "Ejercicio isométrico perfecto para el abdomen. Mantén el cuerpo recto y aprieta el core."
-  },
-  {
-    "id": "lunges",
-    "name": "Zancadas",
-    "muscle": "Piernas",
+    "id": "press-banca-plano",
+    "name": "Press Banca",
+    "muscle": "Pecho y Tríceps",
     "category": "Fuerza",
     "difficulty": "medio",
     "duration": 180,
     "xp": 30,
-    "description": "Alterna piernas dando pasos largos. Baja la rodilla trasera casi hasta el suelo."
+    "description": "Clásico de **fuerza** para **pecho**, con soporte de **tríceps** y **deltoides anteriores**.\n\n### Técnica Correcta\n\n1. Escápulas retraídas, pies firmes\n2. Barra baja al esternón medio-inferior\n3. Empuja en línea vertical controlada\n\n### Consejos\n\n> **Tip:** Mantén una leve **arqueadura torácica** y quiebres de muñeca neutros.\n\n### Errores Comunes\n\n❌ Rebotar la barra  \n❌ Codos muy abiertos  \n❌ Pies inestables\n\n**Respiración:** Inhala en el descenso, exhala al empujar"
   },
   {
-    "id": "jumping-jacks",
-    "name": "Jumping Jacks",
-    "muscle": "Cardio",
-    "category": "Cardio",
+    "id": "press-banca-inclinado",
+    "name": "Press Banca Inclinado",
+    "muscle": "Pecho (porción superior)",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Enfatiza la **porción clavicular** del pecho y el **deltoide anterior**.\n\n### Técnica Correcta\n\n1. Banco a 15–30°\n2. Baja la barra hacia la parte alta del pecho\n3. Empuja sin perder retracción escapular\n\n### Consejos\n\n> Usa un **ángulo moderado** para cuidar hombros y mantener fuerza.\n\n### Errores Comunes\n\n❌ Ángulo muy alto  \n❌ Codos excesivamente abiertos  \n❌ Perder estabilidad escapular\n\n**Respiración:** Inhala al bajar, exhala al subir"
+  },
+  {
+    "id": "aperturas-polea",
+    "name": "Aperturas en Polea",
+    "muscle": "Pecho",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Aíslan **pectoral** con tensión continua en todo el rango.\n\n### Técnica Correcta\n\n1. Tronco estable, ligera flexión de codos\n2. Abraza imaginariamente un barril al frente\n3. Controla la apertura sin perder tensión\n\n### Consejos\n\n> **Tip:** Pausa 1s en la contracción para mayor estímulo.\n\n### Errores Comunes\n\n❌ Cerrar con brazos extendidos rígidos  \n❌ Balanceo del torso  \n❌ Sobrecarga de peso\n\n**Respiración:** Exhala al cerrar, inhala al abrir"
+  },
+  {
+    "id": "pec-deck-fly",
+    "name": "Pec Deck Fly (Peck Fly)",
+    "muscle": "Pecho",
+    "category": "Fuerza",
     "difficulty": "fácil",
-    "duration": 120,
-    "xp": 20,
-    "description": "Ejercicio cardiovascular clásico. Salta abriendo brazos y piernas simultáneamente."
+    "duration": 90,
+    "xp": 15,
+    "description": "Movimiento guiado para **estandizar técnica** y aislar el **pectoral**.\n\n### Técnica Correcta\n\n- Espalda apoyada, hombros abajo\n- Junta los brazos hasta sentir contracción\n- Regresa lento manteniendo control\n\n### Consejos\n\n> Ajusta el asiento para que **codos** queden a la altura del pecho.\n\n### Errores Comunes\n\n❌ Empujar con deltoides  \n❌ Soltar el control en la negativa  \n❌ Recorridos muy cortos\n\n**Respiración:** Exhala al juntar, inhala al abrir"
   },
   {
-    "id": "mountain-climbers",
-    "name": "Escaladores",
-    "muscle": "Core y Cardio",
-    "category": "Cardio",
+    "id": "dominadas",
+    "name": "Dominadas",
+    "muscle": "Espalda y Bíceps",
+    "category": "Fuerza",
     "difficulty": "difícil",
-    "duration": 120,
-    "xp": 40,
-    "description": "Desde posición de plancha, alterna llevando las rodillas al pecho rápidamente."
+    "duration": 240,
+    "xp": 50,
+    "description": "Patrón de tracción vertical para **dorsales** y **bíceps**.\n\n### Técnica Correcta\n\n1. Hombros deprimidos, agarre al ancho de hombros\n2. Tira hasta que la barbilla supere la barra\n3. Desciende controlado a extensión completa\n\n### Consejos\n\n> **Tip:** Piensa en \"**pechos a la barra**\" para activar dorsales.\n\n### Errores Comunes\n\n❌ Balanceo excesivo  \n❌ No extender del todo  \n❌ Subir con cuello\n\n**Respiración:** Exhala al subir, inhala al bajar"
   },
   {
-    "id": "tricep-dips",
-    "name": "Fondos de Tríceps",
+    "id": "jalon-al-pecho",
+    "name": "Jalón al Pecho",
+    "muscle": "Espalda y Bíceps",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Alternativa guiada a la dominada para trabajar **dorsal ancho**.\n\n### Técnica Correcta\n\n1. Tira con codos hacia abajo\n2. Barra hacia el tercio superior del pecho\n3. Controla la subida completa\n\n### Consejos\n\n> Evita llevar la barra detrás de la cabeza para cuidar el cuello.\n\n### Errores Comunes\n\n❌ Tirar con brazos sin espalda  \n❌ Tirones de torso  \n❌ Recorridos parciales\n\n**Respiración:** Exhala al tirar, inhala al subir"
+  },
+  {
+    "id": "remo-barra",
+    "name": "Remo con Barra",
+    "muscle": "Espalda media, Dorsales, Bíceps",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Tracción horizontal para **espalda media** y **dorsales**.\n\n### Técnica Correcta\n\n1. Bisagra de cadera, espalda neutra\n2. Tira la barra hacia el ombligo\n3. Pausa breve y baja controlado\n\n### Consejos\n\n> **Tip:** Mantén el **core tenso** para estabilizar la zona lumbar.\n\n### Errores Comunes\n\n❌ Redondear la espalda  \n❌ Tirones con impulso  \n❌ Subir el torso al tirar\n\n**Respiración:** Exhala al tirar, inhala al bajar"
+  },
+  {
+    "id": "remo-maquina",
+    "name": "Remo en Máquina",
+    "muscle": "Espalda media y Dorsales",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Movimiento guiado con **enfoque en retracción escapular**.\n\n### Técnica Correcta\n\n- Pecho apoyado/torso estable\n- Tira codos atrás pegados al cuerpo\n- Vuelve controlado estirando dorsales\n\n### Consejos\n\n> Ajusta el asiento para iniciar con **escápulas protraídas** y terminar en **retracción**.\n\n### Errores Comunes\n\n❌ Encorvarse  \n❌ Tirar con bíceps únicamente  \n❌ Soltar la negativa\n\n**Respiración:** Exhala al tirar, inhala al regresar"
+  },
+  {
+    "id": "remo-mancuerna",
+    "name": "Remo con Mancuerna",
+    "muscle": "Dorsales y Espalda media",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Unilateral para **corregir asimetrías** y mejorar la conexión mente-músculo.\n\n### Técnica Correcta\n\n1. Apoya una mano/rodilla en banco\n2. Tira la mancuerna hacia la cadera\n3. Controla la bajada completa\n\n### Consejos\n\n> **Tip:** Codo cerca del cuerpo para foco en dorsales.\n\n### Errores Comunes\n\n❌ Girar el torso  \n❌ Tirar con trapecio  \n❌ Recorrido corto\n\n**Respiración:** Exhala al tirar, inhala al bajar"
+  },
+  {
+    "id": "face-pulls",
+    "name": "Face Pulls",
+    "muscle": "Deltoides posteriores y Trapecio medio",
+    "category": "Fuerza",
+    "difficulty": "fácil",
+    "duration": 90,
+    "xp": 15,
+    "description": "Clave para **salud de hombros** y postura.\n\n### Técnica Correcta\n\n- Cuerda a la altura del rostro\n- Tira llevando manos a las orejas\n- Mantén rotación externa\n\n### Consejos\n\n> Enfócate en **escápulas** y rotadores externos, no en peso alto.\n\n### Errores Comunes\n\n❌ Elevar trapecios  \n❌ Codos caídos  \n❌ Tirar con impulso\n\n**Respiración:** Exhala al tirar, inhala al regresar"
+  },
+  {
+    "id": "pull-over-polea",
+    "name": "Pullovers con Polea",
+    "muscle": "Dorsal ancho",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Aislamiento de **dorsales** con tensión constante.\n\n### Técnica Correcta\n\n1. Tronco estable, codos semiflexionados\n2. Desciende la barra/cuerda con brazos en arco\n3. Pausa y regresa controlado\n\n### Consejos\n\n> **Tip:** Mantén costillas bajas para no compensar con lumbar.\n\n### Errores Comunes\n\n❌ Extender codos  \n❌ Hiperextender espalda  \n❌ Recorridos incompletos\n\n**Respiración:** Exhala al bajar, inhala al subir"
+  },
+  {
+    "id": "pull-over-mancuerna",
+    "name": "Pull Over con Mancuerna",
+    "muscle": "Dorsales y Pecho",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Trabajo de **dorsales** y porción esternal del **pecho** según ángulo.\n\n### Técnica Correcta\n\n- Espalda apoyada, brazos en arco\n- Baja la mancuerna detrás de la cabeza\n- Sube manteniendo codos semiflexionados\n\n### Consejos\n\n> Recorre sin dolor en hombros; prioriza control sobre carga.\n\n### Errores Comunes\n\n❌ Codos muy flexionados  \n❌ Hiperextender lumbar  \n❌ Golpes al bajar\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "triceps-overhead-db",
+    "name": "Extensiones de Tríceps por Encima de la Cabeza (Mancuerna)",
+    "muscle": "Tríceps (cabeza larga)",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Enfatiza la **cabeza larga** del **tríceps** al trabajar en **flexión de hombro**.\n\n### Técnica Correcta\n\n1. Codos apuntando al techo\n2. Desciende detrás de la cabeza\n3. Extiende sin abrir codos\n\n### Consejos\n\n> Mantén **costillas abajo** para proteger la zona lumbar.\n\n### Errores Comunes\n\n❌ Codos se abren  \n❌ Balanceo de tronco  \n❌ Recorridos cortos\n\n**Respiración:** Inhala al bajar, exhala al extender"
+  },
+  {
+    "id": "triceps-barra-z",
+    "name": "Extensiones de Tríceps con Barra Z",
     "muscle": "Tríceps",
     "category": "Fuerza",
     "difficulty": "medio",
-    "duration": 120,
-    "xp": 25,
-    "description": "Usa una silla o banco. Baja tu cuerpo flexionando los codos hasta 90 grados."
-  },
-  {
-    "id": "burpees",
-    "name": "Burpees",
-    "muscle": "Cuerpo Completo",
-    "category": "Cardio",
-    "difficulty": "difícil",
     "duration": 180,
-    "xp": 50,
-    "description": "El ejercicio más completo. Combina sentadilla, flexión y salto en un solo movimiento."
+    "xp": 30,
+    "description": "Versión con **barra Z** que mejora comodidad de muñecas y codos.\n\n### Técnica Correcta\n\n- Codos fijos, cerca de la cabeza\n- Baja la barra controlada\n- Extiende hasta casi bloquear\n\n### Consejos\n\n> Usa agarre **angulado** para reducir estrés articular.\n\n### Errores Comunes\n\n❌ Mover hombros  \n❌ Golpear la frente  \n❌ Repeticiones rápidas sin control\n\n**Respiración:** Inhala al bajar, exhala al subir"
   },
   {
-    "id": "bicycle-crunches",
-    "name": "Abdominales Bicicleta",
-    "muscle": "Abdomen",
-    "category": "Técnica",
-    "difficulty": "medio",
-    "duration": 120,
-    "xp": 25,
-    "description": "Acostado, alterna codos con rodillas opuestas en movimiento de pedaleo."
-  },
-  {
-    "id": "high-knees",
-    "name": "Rodillas Altas",
-    "muscle": "Cardio y Piernas",
-    "category": "Cardio",
-    "difficulty": "fácil",
-    "duration": 90,
-    "xp": 20,
-    "description": "Corre en el lugar elevando las rodillas lo más alto posible."
-  },
-  {
-    "id": "wall-sit",
-    "name": "Sentadilla Isométrica",
-    "muscle": "Piernas",
+    "id": "press-frances",
+    "name": "Press Francés",
+    "muscle": "Tríceps",
     "category": "Fuerza",
     "difficulty": "medio",
-    "duration": 60,
-    "xp": 20,
-    "description": "Apoya la espalda en la pared y mantén posición de sentadilla. Resiste!"
+    "duration": 180,
+    "xp": 30,
+    "description": "Aíslamiento del **tríceps** en banco (barra Z o mancuernas).\n\n### Técnica Correcta\n\n1. Hombros estables en el banco\n2. Flexiona codos llevando la carga hacia la frente\n3. Extiende sin desalinear codos\n\n### Consejos\n\n> **Tip:** Mueve solo el **antebrazo**; brazo superior quieto.\n\n### Errores Comunes\n\n❌ Codos abiertos  \n❌ Arqueo lumbar  \n❌ Rebotar la carga\n\n**Respiración:** Inhala en descenso, exhala al extender"
   },
   {
-    "id": "superman",
-    "name": "Superman",
-    "muscle": "Espalda Baja",
-    "category": "Movilidad",
-    "difficulty": "fácil",
-    "duration": 90,
-    "xp": 15,
-    "description": "Boca abajo, eleva brazos y piernas simultáneamente. ¡Como volando!"
-  },
-  {
-    "id": "side-plank",
-    "name": "Plancha Lateral",
-    "muscle": "Core Oblicuos",
-    "category": "Técnica",
-    "difficulty": "medio",
-    "duration": 90,
-    "xp": 25,
-    "description": "Apoya un antebrazo y mantén el cuerpo recto de lado. Fortalece oblicuos."
-  },
-  {
-    "id": "russian-twists",
-    "name": "Giros Rusos",
-    "muscle": "Abdomen Oblicuos",
-    "category": "Técnica",
-    "difficulty": "medio",
-    "duration": 120,
-    "xp": 25,
-    "description": "Sentado, gira el torso de lado a lado. Puedes usar peso para más intensidad."
-  },
-  {
-    "id": "box-jumps",
-    "name": "Saltos al Cajón",
-    "muscle": "Piernas y Potencia",
-    "category": "Fuerza",
-    "difficulty": "difícil",
-    "duration": 120,
-    "xp": 40,
-    "description": "Salta explosivamente a una superficie elevada. Desarrolla potencia."
-  },
-  {
-    "id": "diamond-push-ups",
-    "name": "Flexiones Diamante",
+    "id": "fondos-triceps",
+    "name": "Fondos en Paralelas (Tríceps)",
     "muscle": "Tríceps y Pecho",
     "category": "Fuerza",
     "difficulty": "difícil",
-    "duration": 120,
-    "xp": 40,
-    "description": "Flexiones con manos juntas formando un diamante. Enfoque en tríceps."
+    "duration": 240,
+    "xp": 50,
+    "description": "Enfoque en **tríceps** manteniendo el torso más vertical.\n\n### Técnica Correcta\n\n- Hombros deprimidos\n- Desciende con codos pegados\n- Extiende hasta arriba sin bloquear agresivo\n\n### Consejos\n\n> Usa **asistencia** (banda/máquina) si fallas la técnica.\n\n### Errores Comunes\n\n❌ Hombros hacia las orejas  \n❌ Balanceo  \n❌ Profundidad dolorosa\n\n**Respiración:** Inhala al bajar, exhala al subir"
   },
   {
-    "id": "flutter-kicks",
-    "name": "Patadas de Natación",
-    "muscle": "Abdomen Bajo",
-    "category": "Técnica",
-    "difficulty": "fácil",
-    "duration": 90,
-    "xp": 20,
-    "description": "Acostado, alterna elevando piernas en movimiento de nado."
+    "id": "extension-polea-alta",
+    "name": "Extensión de Tríceps en Polea Alta",
+    "muscle": "Tríceps",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Aíslamiento estable del **tríceps** con cuerda o barra recta.\n\n### Técnica Correcta\n\n1. Codos fijos a los costados\n2. Extiende hasta contraer por completo\n3. Vuelve controlado sin subir hombros\n\n### Consejos\n\n> **Tip:** Separa puntas de la cuerda al final para mayor contracción.\n\n### Errores Comunes\n\n❌ Elevar hombros  \n❌ Balanceo del tronco  \n❌ Recorridos muy cortos\n\n**Respiración:** Exhala al extender, inhala al regresar"
   },
   {
-    "id": "calf-raises",
-    "name": "Elevación de Talones",
-    "muscle": "Pantorrillas",
+    "id": "patada-triceps",
+    "name": "Patada de Tríceps",
+    "muscle": "Tríceps",
     "category": "Fuerza",
     "difficulty": "fácil",
     "duration": 90,
     "xp": 15,
-    "description": "De pie, eleva los talones hasta quedar en punta de pies. Repite."
+    "description": "Aíslamiento con **mancuerna** para sentir la contracción final.\n\n### Técnica Correcta\n\n- Tronco inclinado, espalda neutra\n- Brazo superior fijo paralelo al suelo\n- Extiende el codo y pausa 1s\n\n### Consejos\n\n> Peso **moderado** para controlar toda la repetición.\n\n### Errores Comunes\n\n❌ Mover hombro  \n❌ Sacudir el cuerpo  \n❌ Sin pausa final\n\n**Respiración:** Exhala al extender, inhala al flexionar"
   },
   {
-    "id": "glute-bridges",
-    "name": "Puente de Glúteos",
-    "muscle": "Glúteos",
+    "id": "curl-barra",
+    "name": "Curl de Bíceps con Barra",
+    "muscle": "Bíceps",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Desarrollo general del **bíceps** con cargas mayores.\n\n### Técnica Correcta\n\n1. Codos pegados al cuerpo\n2. Flexiona controlado sin balanceo\n3. Baja lento hasta extensión casi completa\n\n### Consejos\n\n> **Tip:** Mantén muñecas **neutras** para no sobrecargar.\n\n### Errores Comunes\n\n❌ Impulso de cadera  \n❌ Codos se adelantan  \n❌ Negativa rápida\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "curl-martillo",
+    "name": "Curl Martillo",
+    "muscle": "Bíceps y Braquial",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Énfasis en **braquial** y **braquiorradial** para grosor del brazo.\n\n### Técnica Correcta\n\n- Agarre neutro (palmas enfrentadas)\n- Flexiona sin separar codos\n- Controla la bajada completa\n\n### Consejos\n\n> Alterna **unilateral** para mayor enfoque técnico.\n\n### Errores Comunes\n\n❌ Balanceo  \n❌ Acortar recorrido  \n❌ Elevar hombros\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "curl-predicador",
+    "name": "Curl Predicador",
+    "muscle": "Bíceps",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Aísla el **bíceps** minimizando impulso gracias al banco predicador.\n\n### Técnica Correcta\n\n1. Axila bien apoyada\n2. Sube hasta contracción completa\n3. Baja lento sin bloquear duro\n\n### Consejos\n\n> Usa **barra Z** o **mancuerna** según comodidad articular.\n\n### Errores Comunes\n\n❌ Rebotar abajo  \n❌ Despegar el brazo  \n❌ Exceso de peso\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "curl-banco-inclinado",
+    "name": "Curl en Banco Inclinado",
+    "muscle": "Bíceps (cabeza larga)",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Mayor **estiramiento** de bíceps para estímulo en la **cabeza larga**.\n\n### Técnica Correcta\n\n- Brazos caen detrás del torso\n- Flexiona sin adelantar codos\n- Controla la negativa extendida\n\n### Consejos\n\n> Evita encoger hombros; pecho abierto.\n\n### Errores Comunes\n\n❌ Codos se mueven  \n❌ Arqueo lumbar  \n❌ Velocidad excesiva\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "curl-polea-baja",
+    "name": "Curl con Polea Baja",
+    "muscle": "Bíceps",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Tensión constante en el **bíceps** durante todo el rango.\n\n### Técnica Correcta\n\n1. Codos estacionarios\n2. Flexiona hasta contracción completa\n3. Vuelve lento manteniendo tensión\n\n### Consejos\n\n> Alterna **barra recta**, **Z** o **cuerda** para variar estímulo.\n\n### Errores Comunes\n\n❌ Balanceo  \n❌ Recorrido corto  \n❌ Tirar con espalda\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "plancha",
+    "name": "Plancha Abdominal",
+    "muscle": "Core/Abdominales",
+    "category": "Core",
+    "difficulty": "fácil",
+    "duration": 90,
+    "xp": 15,
+    "description": "Isométrico para **core** y **estabilidad lumbopélvica**.\n\n### Técnica Correcta\n\n- Codos bajo hombros, cuerpo en línea\n- Glúteos y abdomen activos\n- Cuello neutro\n\n### Consejos\n\n> **Tip:** Empuja el suelo con antebrazos para activar serrato.\n\n### Errores Comunes\n\n❌ Hundir lumbar  \n❌ Elevar cadera  \n❌ Contener la respiración\n\n**Respiración:** Suave y constante"
+  },
+  {
+    "id": "press-pallof",
+    "name": "Press Pallof",
+    "muscle": "Core anti-rotación",
+    "category": "Core",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Antirrotación para **estabilidad del tronco**.\n\n### Técnica Correcta\n\n1. Cable a la altura del pecho\n2. Presiona al frente sin permitir giro\n3. Mantén 1–2s y regresa\n\n### Consejos\n\n> Aumenta distancia del anclaje para más **palanca**.\n\n### Errores Comunes\n\n❌ Girar el torso  \n❌ Bloquear rodillas  \n❌ Elevar hombros\n\n**Respiración:** Exhala al extender, inhala al volver"
+  },
+  {
+    "id": "superman-core",
+    "name": "Supermán Core",
+    "muscle": "Erectores espinales y Glúteos",
+    "category": "Core",
+    "difficulty": "fácil",
+    "duration": 90,
+    "xp": 15,
+    "description": "Extensión de columna controlada para **cadena posterior**.\n\n### Técnica Correcta\n\n- Eleva brazos y piernas suave\n- Mantén 1–2s sin dolor\n- Baja controlado\n\n### Consejos\n\n> Prioriza **calidad** sobre altura del movimiento.\n\n### Errores Comunes\n\n❌ Balanceo  \n❌ Dolor lumbar  \n❌ Hiperextensión\n\n**Respiración:** Exhala al elevar, inhala al bajar"
+  },
+  {
+    "id": "abdominales-v",
+    "name": "Abdominales en V",
+    "muscle": "Abdominales (recto y flexores de cadera)",
+    "category": "Core",
+    "difficulty": "difícil",
+    "duration": 240,
+    "xp": 50,
+    "description": "Movimiento dinámico para **recto abdominal** y **flexores**.\n\n### Técnica Correcta\n\n1. Eleva piernas y tronco a la vez\n2. Toca pies/manos en el punto alto\n3. Desciende controlado sin golpear\n\n### Consejos\n\n> Si es complejo, usa **tocar espinillas** o **rodillas** primero.\n\n### Errores Comunes\n\n❌ Tirar de cuello  \n❌ Balanceo  \n❌ Pérdida de control en la bajada\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "rueda-abdominal",
+    "name": "Rueda Abdominal",
+    "muscle": "Core anterior",
+    "category": "Core",
+    "difficulty": "difícil",
+    "duration": 240,
+    "xp": 50,
+    "description": "Gran reto de **anti-extensión** para el **core**.\n\n### Técnica Correcta\n\n- Rodillas al suelo (progresión), glúteos activos\n- Rueda hacia delante sin arquear lumbar\n- Regresa con abdomen tenso\n\n### Consejos\n\n> Limita el **rango** para mantener técnica impecable.\n\n### Errores Comunes\n\n❌ Hiperextender espalda  \n❌ Perder tensión  \n❌ Ir más lejos de lo controlable\n\n**Respiración:** Exhala al volver, inhala al avanzar"
+  },
+  {
+    "id": "sentadilla",
+    "name": "Sentadillas",
+    "muscle": "Cuádriceps, Glúteos",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Patrón dominante de **rodilla** para **piernas**.\n\n### Técnica Correcta\n\n1. Pies al ancho de hombros\n2. Cadera atrás/abajo hasta paralelo aprox.\n3. Sube empujando el suelo\n\n### Consejos\n\n> Rodillas siguen la **punta de los pies**; talones apoyados.\n\n### Errores Comunes\n\n❌ Valgo de rodilla  \n❌ Talones se elevan  \n❌ Espalda redondeada\n\n**Respiración:** Inhala al bajar, exhala al subir"
+  },
+  {
+    "id": "prensa-piernas",
+    "name": "Prensa de Piernas",
+    "muscle": "Cuádriceps y Glúteos",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Trabajo guiado para cargar **cuádriceps** con seguridad relativa.\n\n### Técnica Correcta\n\n- Pies firmes, rango cómodo\n- Desciende sin despegar cadera\n- Empuja sin bloquear rodillas\n\n### Consejos\n\n> Ajusta **altura/ancho** de pies según foco muscular.\n\n### Errores Comunes\n\n❌ Rebotar abajo  \n❌ Bloquear agresivo  \n❌ Redondear lumbar\n\n**Respiración:** Inhala al bajar, exhala al empujar"
+  },
+  {
+    "id": "zancadas-mancuerna",
+    "name": "Zancadas con Mancuerna",
+    "muscle": "Cuádriceps y Glúteos",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Patrón unilateral para **estabilidad** y **fuerza**.\n\n### Técnica Correcta\n\n1. Paso largo, torso erguido\n2. Rodilla trasera baja hacia el suelo\n3. Empuja con el talón delantero\n\n### Consejos\n\n> Mantén **línea rodilla-punta**; evita colapsar hacia adentro.\n\n### Errores Comunes\n\n❌ Paso muy corto  \n❌ Talón se eleva  \n❌ Inclinación excesiva\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "step-ups",
+    "name": "Step-Ups (Subidas al Banco)",
+    "muscle": "Cuádriceps y Glúteos",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Enfoque unilateral con gran transferencia a la vida diaria.\n\n### Técnica Correcta\n\n- Pie completo en el cajón\n- Sube extendiendo cadera/rodilla\n- Baja controlado sin dejar caer\n\n### Consejos\n\n> Altura del cajón **moderada** para técnica sólida.\n\n### Errores Comunes\n\n❌ Impulsarse con la pierna de apoyo  \n❌ Rodilla colapsa  \n❌ Caídas bruscas\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "sentadilla-bulgara",
+    "name": "Sentadilla Búlgara con Mancuerna",
+    "muscle": "Cuádriceps y Glúteos",
+    "category": "Fuerza",
+    "difficulty": "difícil",
+    "duration": 240,
+    "xp": 50,
+    "description": "Unilateral **avanzado** con gran estímulo en **cuádriceps**.\n\n### Técnica Correcta\n\n1. Empeine trasero en banco bajo\n2. Desciende vertical con torso erguido\n3. Empuja con talón delantero\n\n### Consejos\n\n> Comienza **sin carga** para dominar equilibrio.\n\n### Errores Comunes\n\n❌ Paso inadecuado  \n❌ Caer hacia adelante  \n❌ Dolor en rodilla por mala alineación\n\n**Respiración:** Inhala al bajar, exhala al subir"
+  },
+  {
+    "id": "hack-squat",
+    "name": "Hack Squat (Prensa Inclinada Guiada)",
+    "muscle": "Cuádriceps",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Máquina para **cuádriceps** con trayectoria guiada.\n\n### Técnica Correcta\n\n- Espalda completa contra el respaldo\n- Desciende profundo sin dolor\n- Empuja sin bloquear\n\n### Consejos\n\n> Ajusta **posición de pies** para foco en cuádriceps.\n\n### Errores Comunes\n\n❌ Levantar talones  \n❌ Bloqueo agresivo  \n❌ Recorrido corto\n\n**Respiración:** Inhala al bajar, exhala al subir"
+  },
+  {
+    "id": "extension-cuadriceps",
+    "name": "Extensión de Cuádriceps en Máquina",
+    "muscle": "Cuádriceps",
     "category": "Fuerza",
     "difficulty": "fácil",
     "duration": 90,
-    "xp": 20,
-    "description": "Acostado boca arriba, eleva la cadera apretando glúteos."
+    "xp": 15,
+    "description": "Aíslamiento directo del **cuádriceps**.\n\n### Técnica Correcta\n\n1. Rodilla alineada con eje de la máquina\n2. Extiende y **pausa** 1s arriba\n3. Baja lento sin soltar peso\n\n### Consejos\n\n> Usa **series moderadas** y control exhaustivo.\n\n### Errores Comunes\n\n❌ Tirones  \n❌ Exceso de peso  \n❌ No pausar arriba\n\n**Respiración:** Exhala al extender, inhala al bajar"
   },
   {
-    "id": "bear-crawl",
-    "name": "Gateo de Oso",
-    "muscle": "Cuerpo Completo",
-    "category": "Movilidad",
+    "id": "peso-muerto",
+    "name": "Peso Muerto",
+    "muscle": "Isquiotibiales, Glúteos, Espalda",
+    "category": "Fuerza",
+    "difficulty": "difícil",
+    "duration": 240,
+    "xp": 50,
+    "description": "Básico de **bisagra de cadera** para cadena posterior.\n\n### Técnica Correcta\n\n- Espalda neutra, barra pegada al cuerpo\n- Empuja el suelo y extiende cadera\n- Controla el descenso con bisagra\n\n### Consejos\n\n> Practica con **peso submáximo** hasta dominar la técnica.\n\n### Errores Comunes\n\n❌ Redondear espalda  \n❌ Barra lejos del cuerpo  \n❌ Tirar solo con espalda\n\n**Respiración:** Intraabdominal al despegar, exhala al finalizar"
+  },
+  {
+    "id": "curl-femoral-acostado",
+    "name": "Curl Femoral Acostado en Máquina",
+    "muscle": "Isquiotibiales",
+    "category": "Fuerza",
     "difficulty": "medio",
-    "duration": 120,
-    "xp": 30,
-    "description": "Gatea manteniendo rodillas elevadas del suelo. Movimiento primal completo."
-  },
-  {
-    "id": "leg-raises",
-    "name": "Elevación de Piernas",
-    "muscle": "Abdomen Bajo",
-    "category": "Técnica",
-    "difficulty": "medio",
-    "duration": 90,
-    "xp": 25,
-    "description": "Acostado, eleva ambas piernas juntas hasta vertical. Control en el descenso."
-  },
-  {
-    "id": "jump-rope",
-    "name": "Saltar la Cuerda",
-    "muscle": "Cardio y Pantorrillas",
-    "category": "Cardio",
-    "difficulty": "fácil",
     "duration": 180,
-    "xp": 25,
-    "description": "Cardio clásico y efectivo. Mantén ritmo constante y aterrizajes suaves."
+    "xp": 30,
+    "description": "Aíslamiento de **isquios** con apoyo ventral.\n\n### Técnica Correcta\n\n1. Caderas pegadas al banco\n2. Flexiona talones hacia glúteos\n3. Baja lento controlando\n\n### Consejos\n\n> **Tip:** No eleves caderas; mantén abdomen activo.\n\n### Errores Comunes\n\n❌ Arqueo lumbar  \n❌ Impulso  \n❌ Recorrido corto\n\n**Respiración:** Exhala al flexionar, inhala al extender"
   },
   {
-    "id": "pike-push-ups",
-    "name": "Flexiones Pike",
-    "muscle": "Hombros",
-    "category": "Técnica",
-    "difficulty": "difícil",
-    "duration": 120,
-    "xp": 35,
-    "description": "Cadera elevada, flexión enfocada en hombros. Preparación para parada de manos."
-  },
-  {
-    "id": "inchworm",
-    "name": "Gusano",
-    "muscle": "Cuerpo Completo",
-    "category": "Movilidad",
+    "id": "curl-femoral-sentado",
+    "name": "Curl Femoral Sentado en Máquina",
+    "muscle": "Isquiotibiales",
+    "category": "Fuerza",
     "difficulty": "medio",
-    "duration": 120,
-    "xp": 25,
-    "description": "Desde de pie, baja con manos hasta plancha y vuelve. Excelente estiramiento dinámico."
+    "duration": 180,
+    "xp": 30,
+    "description": "Variante que enfatiza **isquios** en rango alargado.\n\n### Técnica Correcta\n\n- Espalda apoyada, muslos fijos\n- Flexiona hasta tope cómodo\n- Vuelve controlado\n\n### Consejos\n\n> Ajusta el **rodillo** a la altura del tobillo.\n\n### Errores Comunes\n\n❌ Elevar muslos  \n❌ Balanceo  \n❌ Sin control negativo\n\n**Respiración:** Exhala al flexionar, inhala al volver"
   },
   {
-    "id": "v-ups",
-    "name": "V-Ups",
-    "muscle": "Abdomen Completo",
-    "category": "Técnica",
-    "difficulty": "difícil",
+    "id": "curl-femoral-de-pie",
+    "name": "Curl Femoral de Pie",
+    "muscle": "Isquiotibiales",
+    "category": "Fuerza",
+    "difficulty": "fácil",
     "duration": 90,
-    "xp": 40,
-    "description": "Acostado, eleva piernas y torso simultáneamente formando una V. Avanzado!"
+    "xp": 15,
+    "description": "Unilateral para corregir **asimetrías** en isquios.\n\n### Técnica Correcta\n\n1. Tronco estable, agarre al soporte\n2. Flexiona el talón hacia glúteo\n3. Controla la bajada\n\n### Consejos\n\n> Prioriza **técnica** antes que carga.\n\n### Errores Comunes\n\n❌ Balanceo  \n❌ Acortar rango  \n❌ Empujar con cadera\n\n**Respiración:** Exhala al flexionar, inhala al extender"
+  },
+  {
+    "id": "curl-nordico",
+    "name": "Curl Nórdico de Isquios",
+    "muscle": "Isquiotibiales",
+    "category": "Fuerza",
+    "difficulty": "difícil",
+    "duration": 240,
+    "xp": 50,
+    "description": "Énfasis excéntrico **muy demandante** para isquios.\n\n### Técnica Correcta\n\n- Rodillas acolchadas, pies anclados\n- Desciende lento manteniendo línea corporal\n- Empuja con manos suavemente si fallas\n\n### Consejos\n\n> Usa **bandas** o altura para progresar gradualmente.\n\n### Errores Comunes\n\n❌ Caer sin control  \n❌ Hiperextender lumbar  \n❌ Apoyos inestables\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "elevacion-talones-pie",
+    "name": "Elevación de Talones de Pie",
+    "muscle": "Gemelos (Gastrocnemio)",
+    "category": "Fuerza",
+    "difficulty": "fácil",
+    "duration": 90,
+    "xp": 15,
+    "description": "Trabajo de **gemelos** con rodilla extendida (gastrocnemio).\n\n### Técnica Correcta\n\n1. Subida hasta máxima contracción\n2. Pausa arriba 1s\n3. Baja lento hasta estiramiento\n\n### Consejos\n\n> Realiza **rango completo** y tempo controlado.\n\n### Errores Comunes\n\n❌ Rebotar  \n❌ Recorrido corto  \n❌ Rodillas flexionadas\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "elevacion-talones-prensa",
+    "name": "Elevación de Talones en Prensa",
+    "muscle": "Gemelos",
+    "category": "Fuerza",
+    "difficulty": "medio",
+    "duration": 180,
+    "xp": 30,
+    "description": "Variante pesada y **estable** para gemelos.\n\n### Técnica Correcta\n\n- Puntas en el borde de la plataforma\n- Empuja a máxima flexión plantar\n- Desciende al estiramiento sin rebotar\n\n### Consejos\n\n> Controla la **negativa** para máximo estímulo.\n\n### Errores Comunes\n\n❌ Bloquear rodillas  \n❌ Carga excesiva  \n❌ Recorrido corto\n\n**Respiración:** Exhala al subir, inhala al bajar"
+  },
+  {
+    "id": "elevacion-talones-sentado",
+    "name": "Elevación de Talones Sentado en Máquina",
+    "muscle": "Sóleo (gemelo profundo)",
+    "category": "Fuerza",
+    "difficulty": "fácil",
+    "duration": 90,
+    "xp": 15,
+    "description": "Con rodilla flexionada, prioriza el **sóleo**.\n\n### Técnica Correcta\n\n1. Apoya muslos bajo el pad\n2. Sube talones y **pausa** arriba\n3. Baja lento hasta estirar\n\n### Consejos\n\n> Mantén **ritmo** constante y sin rebotes.\n\n### Errores Comunes\n\n❌ Elevar caderas  \n❌ Golpes en la negativa  \n❌ Sin pausa\n\n**Respiración:** Exhala al subir, inhala al bajar"
   }
 ]

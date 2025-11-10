@@ -51,7 +51,7 @@ function TabIcon({ label, focused, iconType }: TabIconProps) {
 }
 
 export default function TabsLayout() {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAuth((state) => state.isAuthenticated);
   const router = useRouter();
   const segments = useSegments();
 
@@ -111,10 +111,18 @@ export default function TabsLayout() {
           ),
         }}
       />
+
+      {/* Rutas ocultas del navbar - pantallas de navegación secundarias */}
       <Tabs.Screen
         name="exercises/[id]"
         options={{
-          href: null, // Oculta esta pantalla del tab bar
+          href: null, // Ocultar del navbar
+        }}
+      />
+      <Tabs.Screen
+        name="profile/notifications"
+        options={{
+          href: null, // Ocultar del navbar
         }}
       />
     </Tabs>

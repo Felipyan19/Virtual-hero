@@ -48,18 +48,16 @@ export const AchievementUnlocked: React.FC<AchievementUnlockedProps> = ({
     if (visible && achievement) {
       // Reproducir sonido
       if (soundEnabled) {
-        const sound = achievement.rarity === 'legendary' || achievement.rarity === 'mythic'
-          ? SoundEffect.LEGENDARY
-          : SoundEffect.ACHIEVEMENT;
+        const sound =
+          achievement.rarity === 'legendary' || achievement.rarity === 'mythic'
+            ? SoundEffect.LEGENDARY
+            : SoundEffect.ACHIEVEMENT;
         playSound(sound);
       }
 
       // Animaciones
       opacity.value = withTiming(1, { duration: 200 });
-      scale.value = withSequence(
-        withSpring(1.1, { damping: 8 }),
-        withSpring(1, { damping: 10 })
-      );
+      scale.value = withSequence(withSpring(1.1, { damping: 8 }), withSpring(1, { damping: 10 }));
       iconScale.value = withSequence(
         withSpring(1.3, { damping: 6 }),
         withSpring(1, { damping: 8 })
@@ -96,12 +94,7 @@ export const AchievementUnlocked: React.FC<AchievementUnlockedProps> = ({
     : (['#6D28D9', '#2563EB'] as const);
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="none"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
       <View style={styles.overlay}>
         <ConfettiPow
           visible={visible}
@@ -132,9 +125,7 @@ export const AchievementUnlocked: React.FC<AchievementUnlockedProps> = ({
 
             {achievement.rarity && (
               <View style={styles.rarityBadge}>
-                <Text style={styles.rarityText}>
-                  {achievement.rarity.toUpperCase()}
-                </Text>
+                <Text style={styles.rarityText}>{achievement.rarity.toUpperCase()}</Text>
               </View>
             )}
 
