@@ -78,6 +78,7 @@ export const useSleep = create<SleepState>()(
         state.updateDayIfNeeded();
 
         const targetMet = minutes >= state.targetSleepMinutes;
+        const previousMinutes = state.todayMinutes;
 
         set({
           todayMinutes: minutes,
@@ -89,6 +90,14 @@ export const useSleep = create<SleepState>()(
         if (targetMet) {
           const newConsecutive = state.consecutiveDaysMetGoal + 1;
           set({ consecutiveDaysMetGoal: newConsecutive });
+
+          // Solo notificar si es la primera vez que se cumple la meta hoy
+          if (previousMinutes < state.targetSleepMinutes) {
+            // Notificar al servicio de metas diarias
+            import('@/services/dailyGoalsService').then(({ onGoalCompleted }) => {
+              onGoalCompleted('sleep');
+            });
+          }
 
           // Logro: 7 días seguidos durmiendo bien
           if (newConsecutive === 7) {

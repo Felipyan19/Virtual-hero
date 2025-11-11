@@ -19,6 +19,7 @@ import { SleepEnergyBar } from '@/components/SleepEnergyBar';
 import { BadgeSticker } from '@/components/BadgeSticker';
 import { calculateXP, XPSource } from '@/lib/xp';
 import { getDailyExerciseId } from '@/lib/dailyExercise';
+import { initializeDailyCheck } from '@/services/dailyGoalsService';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -54,6 +55,9 @@ export default function HomeScreen() {
     updateHydrationDay();
     updateSleepDay();
     updateStepsDay();
+
+    // Verificar y actualizar racha según metas diarias
+    initializeDailyCheck();
   }, []);
 
   const handleAddCup = () => {

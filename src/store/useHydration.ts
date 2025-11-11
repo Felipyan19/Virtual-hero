@@ -72,6 +72,12 @@ export const useHydration = create<HydrationState>()(
         // Verificar si se alcanzó la meta
         if (newTodayML >= state.dailyGoalML && state.todayML < state.dailyGoalML) {
           console.log('[Hidratación] ¡Meta diaria alcanzada! 💧');
+
+          // Notificar al servicio de metas diarias
+          import('@/services/dailyGoalsService').then(({ onGoalCompleted }) => {
+            onGoalCompleted('water');
+          });
+
           // TODO: Desbloquear logro 'hydra_hero' en primera vez
         }
       },

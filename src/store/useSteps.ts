@@ -74,6 +74,12 @@ export const useSteps = create<StepsState>()(
         // Si acaba de alcanzar la meta
         if (goalMet && !previousGoalMet) {
           console.log('[Pasos] ¡Meta diaria alcanzada! 👟');
+
+          // Notificar al servicio de metas diarias
+          import('@/services/dailyGoalsService').then(({ onGoalCompleted }) => {
+            onGoalCompleted('steps');
+          });
+
           // TODO: Sumar XP (50 XP por meta de pasos)
 
           // Logro: Primera vez con 1,000 pasos
