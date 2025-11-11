@@ -20,6 +20,11 @@ import { BadgeSticker } from '@/components/BadgeSticker';
 import { calculateXP, XPSource } from '@/lib/xp';
 import { getDailyExerciseId } from '@/lib/dailyExercise';
 import { initializeDailyCheck } from '@/services/dailyGoalsService';
+import {
+  subscribeToPedometer,
+  requestPedometerPermissions,
+  isPedometerAvailable,
+} from '@/services/pedometerService';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -47,6 +52,7 @@ export default function HomeScreen() {
     dailyGoalSteps,
     isLoading: stepsLoading,
     syncSteps,
+    updateSteps,
     updateDayIfNeeded: updateStepsDay,
   } = useSteps();
 
@@ -58,6 +64,44 @@ export default function HomeScreen() {
 
     // Verificar y actualizar racha según metas diarias
     initializeDailyCheck();
+  }, []);
+
+  useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
+
+    const start = async () => {
+      // Verificar disponibilidad del podómetro
+      const available = await isPedometerAvailable();
+      if (!available) {
+        console.log('[Home] Podómetro no disponible en este dispositivo');
+        return;
+      }
+
+      // Solicitar permisos explícitamente
+      const hasPermission = await requestPedometerPermissions();
+      if (!hasPermission) {
+        console.log('[Home] Permisos de podómetro denegados por el usuario');
+        return;
+      }
+
+      console.log('[Home] Permisos concedidos, iniciando sincronización');
+
+      // Sincronizar una vez al entrar
+      await syncSteps();
+
+      // Suscribirse para actualizaciones en tiempo real (suma baseline + live)
+      unsubscribe = subscribeToPedometer((totalToday) => {
+        updateSteps(totalToday);
+      });
+    };
+
+    start();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   const handleAddCup = () => {

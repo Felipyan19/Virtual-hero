@@ -30,10 +30,23 @@ export const isPedometerAvailable = async (): Promise<boolean> => {
 export const requestPedometerPermissions = async (): Promise<boolean> => {
   try {
     if (Platform.OS === 'android') {
-      const { granted } = await Pedometer.requestPermissionsAsync();
-      return granted;
+      console.log('[Pedometer] Solicitando permisos de ACTIVITY_RECOGNITION...');
+      const result = await Pedometer.requestPermissionsAsync();
+      console.log('[Pedometer] Resultado de permisos:', result);
+
+      if (result.granted) {
+        console.log('[Pedometer] ✓ Permisos concedidos');
+      } else {
+        console.log('[Pedometer] ✗ Permisos denegados');
+        if (result.canAskAgain !== undefined) {
+          console.log('[Pedometer] ¿Puede volver a preguntar?', result.canAskAgain);
+        }
+      }
+
+      return result.granted;
     }
     // En iOS no necesita permisos explícitos
+    console.log('[Pedometer] iOS - no requiere permisos explícitos');
     return true;
   } catch (error) {
     console.error('[Pedometer] Error solicitando permisos:', error);
@@ -56,16 +69,24 @@ export const getTodaySteps = async (): Promise<number> => {
     const start = new Date();
     start.setHours(0, 0, 0, 0); // Inicio del día
 
+    console.log(
+      `[Pedometer] Obteniendo pasos desde ${start.toLocaleTimeString()} hasta ${end.toLocaleTimeString()}`
+    );
+
     const result = await Pedometer.getStepCountAsync(start, end);
 
     if (result && typeof result.steps === 'number') {
-      console.log(`[Pedometer] Pasos hoy: ${result.steps}`);
+      console.log(`[Pedometer] ✓ Pasos hoy: ${result.steps}`);
       return result.steps;
     }
 
+    console.log('[Pedometer] ⚠ No se obtuvieron datos de pasos');
     return 0;
   } catch (error) {
-    console.error('[Pedometer] Error obteniendo pasos:', error);
+    console.error('[Pedometer] ✗ Error obteniendo pasos:', error);
+    if (error instanceof Error) {
+      console.error('[Pedometer] Mensaje de error:', error.message);
+    }
     return 0;
   }
 };
@@ -106,7 +127,7 @@ export const getStepsInRange = async (
  */
 export const subscribeToPedometer = (callback: (steps: number) => void): (() => void) => {
   let subscription: any = null;
-  let cumulativeSteps = 0;
+  let baseSteps = 0;
 
   const startSubscription = async () => {
     try {
@@ -116,10 +137,29 @@ export const subscribeToPedometer = (callback: (steps: number) => void): (() => 
         return;
       }
 
+      // Solicitar permisos cuando aplique (Android)
+      if (Platform.OS === 'android') {
+        try {
+          const { granted } = await Pedometer.requestPermissionsAsync();
+          if (!granted) {
+            console.log('[Pedometer] Permisos denegados para suscripción');
+            return;
+          }
+          console.log('[Pedometer] Permisos concedidos');
+        } catch (permError) {
+          console.error('[Pedometer] Error al solicitar permisos:', permError);
+          return;
+        }
+      }
+
+      // Obtener baseline de pasos del día actual para sumar los incrementos del watch
+      baseSteps = await getTodaySteps();
+
       subscription = Pedometer.watchStepCount((result) => {
-        // Los pasos vienen como incrementos
-        cumulativeSteps += result.steps;
-        callback(cumulativeSteps);
+        // result.steps = pasos desde que inició la suscripción (no incremental)
+        const liveSinceSubscription = typeof result?.steps === 'number' ? result.steps : 0;
+        const totalToday = baseSteps + liveSinceSubscription;
+        callback(totalToday);
       });
 
       console.log('[Pedometer] Suscripción iniciada');

@@ -53,7 +53,13 @@
           "sounds": []
         }
       ],
-      "expo-audio"
+      "expo-audio",
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Virtual Hero usa el sensor de movimiento para contar tus pasos y registrar tu actividad física."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

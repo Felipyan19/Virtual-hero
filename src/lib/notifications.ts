@@ -15,12 +15,21 @@ let notificationsInitialized = false;
 
 // Configurar comportamiento de notificaciones
 Notifications.setNotificationHandler({
-  handleNotification: async () =>
-    ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
+  handleNotification: async (notification) => {
+    // En Expo Go, las notificaciones se muestran al programarlas (comportamiento de desarrollo)
+    // En production, esto no pasará
+    // Por ahora, mostramos solo notificaciones importantes (logros, level up)
+    const notificationType = notification.request.content.data?.type;
+
+    // Solo mostrar notificaciones importantes inmediatamente
+    const isImportant = ['achievement', 'level_up', 'streak'].includes(notificationType as string);
+
+    return {
+      shouldShowBanner: isImportant,
+      shouldPlaySound: isImportant,
       shouldSetBadge: false,
-    }) as Notifications.NotificationBehavior,
+    };
+  },
 });
 
 /**
@@ -512,7 +521,8 @@ export const scheduleMeditationReminders = async (
       },
     ];
 
-    times.forEach(async (hour, index) => {
+    for (let index = 0; index < times.length; index++) {
+      const hour = times[index];
       const message = messages[index % messages.length];
       const identifier = `meditation-reminder-${hour}`;
 
@@ -531,7 +541,7 @@ export const scheduleMeditationReminders = async (
           repeats: true,
         } as Notifications.NotificationTriggerInput,
       });
-    });
+    }
 
     console.log('[Notificaciones] Recordatorios de meditación programados');
   } catch (error) {
@@ -586,7 +596,8 @@ export const scheduleHealthyEatingReminders = async (
       },
     ];
 
-    mealTimes.forEach(async (hour, index) => {
+    for (let index = 0; index < mealTimes.length; index++) {
+      const hour = mealTimes[index];
       const message = messages[index % messages.length];
       const identifier = `meal-reminder-${hour}`;
 
@@ -605,7 +616,7 @@ export const scheduleHealthyEatingReminders = async (
           repeats: true,
         } as Notifications.NotificationTriggerInput,
       });
-    });
+    }
 
     console.log('[Notificaciones] Recordatorios de comidas programados');
   } catch (error) {
@@ -671,51 +682,86 @@ export const cancelAllHealthReminders = async (): Promise<void> => {
 /**
  * Restaurar notificaciones basadas en configuración guardada
  * Debe llamarse al iniciar la app
+ *
+ * PROTECCIÓN MEJORADA CONTRA DUPLICADOS:
+ * - Usa debouncing de 2 horas (más estricto que 24h)
+ * - Verifica notificaciones existentes antes de cancelar
+ * - Logging detallado para debugging
+ * - Protección contra hot reload y reaperturas rápidas
  */
 export const restoreNotificationsFromSettings = async (): Promise<void> => {
   try {
     // Importar AsyncStorage dinámicamente para evitar errores de dependencia circular
     const AsyncStorage = require('@react-native-async-storage/async-storage').default;
 
-    // Verificar última inicialización usando AsyncStorage (persistente entre sesiones)
-    const LAST_INIT_KEY = 'notifications_last_initialized';
-    const lastInitTimestamp = await AsyncStorage.getItem(LAST_INIT_KEY);
-    const now = Date.now();
+    console.log('[Notificaciones] 🔄 Iniciando restauración de notificaciones...');
 
-    // Si se inicializó en las últimas 24 horas, no volver a inicializar
+    // === PASO 1: Verificar inicialización reciente (debouncing estricto) ===
+    const LAST_INIT_KEY = 'notifications_last_initialized';
+    const INIT_SESSION_KEY = 'notifications_init_session_id';
+    const lastInitTimestamp = await AsyncStorage.getItem(LAST_INIT_KEY);
+    const lastSessionId = await AsyncStorage.getItem(INIT_SESSION_KEY);
+    const now = Date.now();
+    const currentSessionId = `${now}-${Math.random().toString(36).substr(2, 9)}`;
+
+    // Debouncing de 2 horas (más estricto para evitar duplicados en reaperturas del mismo día)
+    const TWO_HOURS = 2 * 60 * 60 * 1000;
+
     if (lastInitTimestamp) {
       const timeSinceLastInit = now - parseInt(lastInitTimestamp, 10);
-      const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
-      if (timeSinceLastInit < TWENTY_FOUR_HOURS) {
-        console.log('[Notificaciones] Ya inicializadas recientemente, omitiendo restauración');
+      if (timeSinceLastInit < TWO_HOURS) {
+        console.log(
+          `[Notificaciones] ⏸️ Ya inicializadas hace ${Math.round(timeSinceLastInit / 60000)} minutos, omitiendo`
+        );
+        console.log(`[Notificaciones] 📋 Última sesión: ${lastSessionId}`);
         notificationsInitialized = true;
         return;
+      } else {
+        console.log(
+          `[Notificaciones] ⏰ Última inicialización hace ${Math.round(timeSinceLastInit / 60000)} minutos, continuando...`
+        );
       }
     }
 
-    // Evitar inicialización múltiple en la misma sesión
+    // === PASO 2: Evitar inicialización múltiple en la misma sesión ===
     if (notificationsInitialized) {
-      console.log('[Notificaciones] Ya inicializadas en esta sesión, omitiendo');
-      return;
-    }
-
-    // Verificar si hay notificaciones programadas
-    const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
-
-    // Si hay notificaciones programadas y se inicializó recientemente, no hacer nada
-    if (scheduledNotifications.length > 0 && lastInitTimestamp) {
       console.log(
-        `[Notificaciones] ${scheduledNotifications.length} notificaciones ya programadas, omitiendo`
+        '[Notificaciones] ✅ Ya inicializadas en esta sesión (flag en memoria), omitiendo'
       );
-      notificationsInitialized = true;
       return;
     }
 
-    // Cancelar todas las notificaciones existentes solo si vamos a reprogramar
-    console.log('[Notificaciones] Limpiando notificaciones previas...');
-    await Notifications.cancelAllScheduledNotificationsAsync();
+    // === PASO 3: Verificar notificaciones programadas existentes ===
+    const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
+    console.log(
+      `[Notificaciones] 📊 Notificaciones programadas existentes: ${scheduledNotifications.length}`
+    );
 
+    // Listar tipos de notificaciones existentes para debugging
+    if (scheduledNotifications.length > 0) {
+      const types = scheduledNotifications.map((n) => n.identifier).join(', ');
+      console.log(`[Notificaciones] 📝 Tipos existentes: ${types.substring(0, 100)}...`);
+
+      // Si hay muchas notificaciones y se inicializó hace poco, probablemente son duplicados
+      if (scheduledNotifications.length > 50 && lastInitTimestamp) {
+        const timeSinceLastInit = now - parseInt(lastInitTimestamp, 10);
+        if (timeSinceLastInit < TWO_HOURS) {
+          console.log('[Notificaciones] ⚠️ Detectadas posibles duplicados, omitiendo');
+          notificationsInitialized = true;
+          return;
+        }
+      }
+    }
+
+    // === PASO 4: Cancelar notificaciones existentes antes de reprogramar ===
+    if (scheduledNotifications.length > 0) {
+      console.log('[Notificaciones] 🧹 Limpiando notificaciones previas...');
+      await Notifications.cancelAllScheduledNotificationsAsync();
+      console.log('[Notificaciones] ✅ Notificaciones previas canceladas');
+    }
+
+    // === PASO 5: Leer configuración de usuario desde AsyncStorage ===
     const STORAGE_KEYS = {
       WATER_REMINDERS: 'notifications_water_enabled',
       EXERCISE_REMINDERS: 'notifications_exercise_enabled',
@@ -727,43 +773,64 @@ export const restoreNotificationsFromSettings = async (): Promise<void> => {
     };
 
     const settings = await AsyncStorage.multiGet(Object.values(STORAGE_KEYS));
+    console.log('[Notificaciones] 📖 Configuración leída desde AsyncStorage');
+
+    // === PASO 6: Programar notificaciones según configuración ===
+    let scheduledCount = 0;
 
     for (const [key, value] of settings) {
       if (value === 'true') {
+        console.log(`[Notificaciones] 🔔 Programando: ${key}`);
+
         switch (key) {
           case STORAGE_KEYS.WATER_REMINDERS:
             await scheduleWaterReminders(2);
+            scheduledCount++;
             break;
           case STORAGE_KEYS.EXERCISE_REMINDERS:
             await scheduleExerciseReminders([7, 12, 18]);
+            scheduledCount++;
             break;
           case STORAGE_KEYS.BEDTIME_REMINDER:
             await scheduleBedtimeReminder(22);
+            scheduledCount++;
             break;
           case STORAGE_KEYS.POSTURE_REMINDERS:
             await schedulePostureReminders(1, 9, 18);
+            scheduledCount++;
             break;
           case STORAGE_KEYS.EYE_REST_REMINDERS:
             await scheduleEyeRestReminders(30, 9, 18);
+            scheduledCount++;
             break;
           case STORAGE_KEYS.MEDITATION_REMINDERS:
             await scheduleMeditationReminders([8, 20]);
+            scheduledCount++;
             break;
           case STORAGE_KEYS.MEAL_REMINDERS:
             await scheduleHealthyEatingReminders([7, 13, 19]);
+            scheduledCount++;
             break;
         }
       }
     }
 
-    // Guardar timestamp de inicialización
-    await AsyncStorage.setItem(LAST_INIT_KEY, now.toString());
+    // === PASO 7: Guardar timestamp y session ID de inicialización ===
+    await AsyncStorage.multiSet([
+      [LAST_INIT_KEY, now.toString()],
+      [INIT_SESSION_KEY, currentSessionId],
+    ]);
 
-    // Marcar como inicializado
+    // === PASO 8: Marcar como inicializado y verificar total ===
     notificationsInitialized = true;
-    console.log('[Notificaciones] Notificaciones restauradas desde configuración');
+
+    const finalScheduled = await Notifications.getAllScheduledNotificationsAsync();
+    console.log(
+      `[Notificaciones] ✅ Restauración completada: ${scheduledCount} tipos programados, ${finalScheduled.length} notificaciones totales`
+    );
+    console.log(`[Notificaciones] 🆔 Session ID: ${currentSessionId}`);
   } catch (error) {
-    console.error('[Notificaciones] Error al restaurar notificaciones:', error);
+    console.error('[Notificaciones] ❌ Error al restaurar notificaciones:', error);
   }
 };
 

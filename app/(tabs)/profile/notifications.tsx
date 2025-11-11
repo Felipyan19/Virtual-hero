@@ -109,7 +109,6 @@ export default function NotificationsSettingsScreen() {
 
     if (value) {
       await scheduleWaterReminders(2); // Cada 2 horas
-      Alert.alert('✅ Activado', 'Recibirás recordatorios cada 2 horas para tomar agua');
     } else {
       await cancelWaterReminders();
     }
@@ -121,10 +120,6 @@ export default function NotificationsSettingsScreen() {
 
     if (value) {
       await scheduleExerciseReminders([7, 12, 18]); // 7am, 12pm, 6pm
-      Alert.alert(
-        '✅ Activado',
-        'Recibirás recordatorios motivadores para ejercitarte 3 veces al día'
-      );
     } else {
       await cancelExerciseReminders();
     }
@@ -136,7 +131,6 @@ export default function NotificationsSettingsScreen() {
 
     if (value) {
       await scheduleBedtimeReminder(22); // 10 PM
-      Alert.alert('✅ Activado', 'Recibirás un recordatorio a las 10 PM para dormir');
     } else {
       await cancelBedtimeReminder();
     }
@@ -148,7 +142,6 @@ export default function NotificationsSettingsScreen() {
 
     if (value) {
       await schedulePostureReminders(1, 9, 18); // Cada hora de 9am a 6pm
-      Alert.alert('✅ Activado', 'Recibirás recordatorios cada hora para revisar tu postura');
     } else {
       await cancelPostureReminders();
     }
@@ -160,7 +153,6 @@ export default function NotificationsSettingsScreen() {
 
     if (value) {
       await scheduleEyeRestReminders(30, 9, 18); // Cada 30 minutos
-      Alert.alert('✅ Activado', 'Recibirás recordatorios cada 30 minutos para descansar la vista');
     } else {
       await cancelEyeRestReminders();
     }
@@ -172,7 +164,6 @@ export default function NotificationsSettingsScreen() {
 
     if (value) {
       await scheduleMeditationReminders([8, 20]); // 8am y 8pm
-      Alert.alert('✅ Activado', 'Recibirás recordatorios para meditar por la mañana y noche');
     } else {
       await cancelMeditationReminders();
     }
@@ -184,7 +175,6 @@ export default function NotificationsSettingsScreen() {
 
     if (value) {
       await scheduleHealthyEatingReminders([7, 13, 19]); // 7am, 1pm, 7pm
-      Alert.alert('✅ Activado', 'Recibirás recordatorios para desayuno, almuerzo y cena');
     } else {
       await cancelHealthyEatingReminders();
     }
@@ -219,8 +209,6 @@ export default function NotificationsSettingsScreen() {
 
             // Programar todas las notificaciones
             await scheduleAllDefaultReminders();
-
-            Alert.alert('✅ Completado', 'Todos los recordatorios han sido activados');
           },
         },
       ]
@@ -259,8 +247,6 @@ export default function NotificationsSettingsScreen() {
 
             // Cancelar todas las notificaciones de salud
             await cancelAllHealthReminders();
-
-            Alert.alert('✅ Completado', 'Todos los recordatorios han sido desactivados');
           },
         },
       ]
