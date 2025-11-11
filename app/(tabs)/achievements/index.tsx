@@ -21,7 +21,7 @@ import theme from '@/theme/theme';
 const { width } = Dimensions.get('window');
 const CARD_SIZE = (width - 48) / 2; // 2 columnas con padding
 
-type FilterType = 'all' | AchievementCategory;
+type FilterType = 'all' | 'unlocked' | AchievementCategory;
 
 export default function AchievementsScreen() {
   const [userStats, setUserStats] = useState<UserStats | null>(null);
@@ -55,7 +55,9 @@ export default function AchievementsScreen() {
   const filteredAchievements =
     filter === 'all'
       ? ACHIEVEMENTS.filter((a) => !a.isHidden)
-      : getAchievementsByCategory(filter).filter((a) => !a.isHidden);
+      : filter === 'unlocked'
+        ? ACHIEVEMENTS.filter((a) => !a.isHidden && isAchievementUnlocked(a, userStats))
+        : getAchievementsByCategory(filter).filter((a) => !a.isHidden);
 
   return (
     <View style={theme.layout.container}>
@@ -108,6 +110,12 @@ export default function AchievementsScreen() {
             icon="⚡"
             isActive={filter === 'all'}
             onPress={() => setFilter('all')}
+          />
+          <FilterButton
+            label="Desbloqueados"
+            icon="🏆"
+            isActive={filter === 'unlocked'}
+            onPress={() => setFilter('unlocked')}
           />
           <FilterButton
             label="Horarios"
@@ -174,6 +182,17 @@ function HeroCard({ achievement, userStats }: { achievement: Achievement; userSt
   const unlocked = isAchievementUnlocked(achievement, userStats);
   const progress = getAchievementProgress(achievement, userStats);
 
+  // Obtener la fecha de desbloqueo si existe
+  const unlockedData = userStats.unlockedAchievements.find(
+    (a) => a.achievementId === achievement.id
+  );
+  const unlockedDate = unlockedData
+    ? new Date(unlockedData.unlockedAt).toLocaleDateString('es-ES', {
+        day: 'numeric',
+        month: 'short',
+      })
+    : null;
+
   const rarityColors = {
     common: ['#6c757d', '#495057'] as const,
     rare: ['#20c997', '#17a2b8'] as const,
@@ -182,43 +201,99 @@ function HeroCard({ achievement, userStats }: { achievement: Achievement; userSt
     mythic: ['#e74c3c', '#c0392b'] as const,
   };
 
-  const colors = rarityColors[achievement.rarity];
+  // Colores especiales para cards desbloqueadas (efecto dorado/brillante)
+  const unlockedGradient = {
+    common: ['#FFD700', '#FFA500'] as const, // Dorado
+    rare: ['#00CED1', '#1E90FF'] as const, // Azul brillante
+    epic: ['#9370DB', '#FF1493'] as const, // Púrpura brillante
+    legendary: ['#FF8C00', '#FF4500'] as const, // Naranja fuego
+    mythic: ['#FF1493', '#8B008B'] as const, // Rosa/Púrpura místico
+  };
+
+  const colors = unlocked ? unlockedGradient[achievement.rarity] : rarityColors[achievement.rarity];
 
   return (
     <TouchableOpacity style={styles.heroCard} activeOpacity={0.8}>
-      <View style={styles.heroCardContainer}>
-        {/* Icono/Silueta del héroe */}
-        <View style={[styles.heroIcon, !unlocked && styles.heroIconLocked]}>
-          <Text style={styles.heroIconText}>{unlocked ? '🦸' : '🔒'}</Text>
-        </View>
+      {/* Card desbloqueada con gradiente especial */}
+      {unlocked ? (
+        <LinearGradient
+          colors={[colors[0], colors[1]]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.heroCardContainer, styles.heroCardUnlocked]}
+        >
+          {/* Efecto de brillo en la esquina */}
+          <View style={styles.glowEffect} />
 
-        {/* Nombre del héroe */}
-        <Text style={[styles.heroName, !unlocked && styles.heroNameLocked]} numberOfLines={2}>
-          {unlocked ? achievement.heroName : '???'}
-        </Text>
-
-        {/* Progreso */}
-        {!unlocked && progress.percentage > 0 && (
-          <View style={styles.progressContainer}>
-            <View style={styles.progressBarSmall}>
-              <View style={[styles.progressBarSmallFill, { width: `${progress.percentage}%` }]} />
-            </View>
-            <Text style={styles.progressText}>
-              {progress.current}/{progress.target}
-            </Text>
+          {/* Icono del héroe */}
+          <View style={[styles.heroIcon, styles.heroIconUnlocked]}>
+            <Text style={styles.heroIconText}>🦸</Text>
           </View>
-        )}
 
-        {/* Badge de rareza */}
-        <View style={[styles.rarityBadge, { backgroundColor: colors[0] }]}>
-          <Text style={styles.rarityText}>{achievement.rarity.toUpperCase()}</Text>
-        </View>
+          {/* Nombre del héroe */}
+          <Text style={[styles.heroName, styles.heroNameUnlocked]} numberOfLines={2}>
+            {achievement.heroName}
+          </Text>
 
-        {/* Tier */}
-        <View style={styles.tierBadge}>
-          <Text style={styles.tierText}>★{achievement.tier}</Text>
+          {/* Fecha de desbloqueo */}
+          {unlockedDate && (
+            <View style={styles.unlockedDateContainer}>
+              <Text style={styles.unlockedDateIcon}>🎉</Text>
+              <Text style={styles.unlockedDateText}>{unlockedDate}</Text>
+            </View>
+          )}
+
+          {/* Badge de rareza */}
+          <View style={[styles.rarityBadge, styles.rarityBadgeUnlocked]}>
+            <Text style={styles.rarityText}>{achievement.rarity.toUpperCase()}</Text>
+          </View>
+
+          {/* Tier */}
+          <View style={[styles.tierBadge, styles.tierBadgeUnlocked]}>
+            <Text style={styles.tierTextUnlocked}>★{achievement.tier}</Text>
+          </View>
+
+          {/* Recompensa de XP */}
+          <View style={styles.xpBadge}>
+            <Text style={styles.xpBadgeText}>+{achievement.xpReward} XP</Text>
+          </View>
+        </LinearGradient>
+      ) : (
+        /* Card bloqueada (diseño original) */
+        <View style={styles.heroCardContainer}>
+          {/* Icono/Silueta del héroe */}
+          <View style={[styles.heroIcon, styles.heroIconLocked]}>
+            <Text style={styles.heroIconText}>🔒</Text>
+          </View>
+
+          {/* Nombre del héroe */}
+          <Text style={[styles.heroName, styles.heroNameLocked]} numberOfLines={2}>
+            ???
+          </Text>
+
+          {/* Progreso */}
+          {progress.percentage > 0 && (
+            <View style={styles.progressContainer}>
+              <View style={styles.progressBarSmall}>
+                <View style={[styles.progressBarSmallFill, { width: `${progress.percentage}%` }]} />
+              </View>
+              <Text style={styles.progressText}>
+                {progress.current}/{progress.target}
+              </Text>
+            </View>
+          )}
+
+          {/* Badge de rareza */}
+          <View style={[styles.rarityBadge, { backgroundColor: colors[0] }]}>
+            <Text style={styles.rarityText}>{achievement.rarity.toUpperCase()}</Text>
+          </View>
+
+          {/* Tier */}
+          <View style={styles.tierBadge}>
+            <Text style={styles.tierText}>★{achievement.tier}</Text>
+          </View>
         </View>
-      </View>
+      )}
     </TouchableOpacity>
   );
 }
@@ -357,6 +432,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     position: 'relative',
   },
+  heroCardUnlocked: {
+    shadowColor: '#FFD700',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.6,
+    shadowRadius: 12,
+    elevation: 15,
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+  },
+  glowEffect: {
+    position: 'absolute',
+    top: -20,
+    right: -20,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    opacity: 0.6,
+  },
   heroIcon: {
     width: 50,
     height: 50,
@@ -368,6 +462,16 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderWidth: theme.borderWidth.medium,
     borderColor: theme.colors.cyan,
+  },
+  heroIconUnlocked: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderWidth: 3,
+    shadowColor: '#fff',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.8,
+    shadowRadius: 8,
+    elevation: 8,
   },
   heroIconLocked: {
     backgroundColor: theme.colors.paperDark,
@@ -384,8 +488,43 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.xs,
     minHeight: 36,
   },
+  heroNameUnlocked: {
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.9)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
+    fontSize: 13,
+    fontWeight: '900',
+    letterSpacing: 0.5,
+  },
   heroNameLocked: {
     color: theme.colors.gray600,
+  },
+  unlockedDateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: 4,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: theme.borderRadius.sm,
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  unlockedDateIcon: {
+    fontSize: 12,
+    marginRight: 4,
+  },
+  unlockedDateText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
+    letterSpacing: 0.3,
   },
   progressContainer: {
     marginTop: 5,
@@ -415,11 +554,19 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: theme.borderRadius.sm,
   },
+  rarityBadgeUnlocked: {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+  },
   rarityText: {
     fontSize: 9,
     fontWeight: 'bold',
-    color: theme.colors.paper,
+    color: '#FFFFFF',
     textTransform: 'uppercase',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   tierBadge: {
     position: 'absolute',
@@ -432,10 +579,43 @@ const styles = StyleSheet.create({
     borderWidth: theme.borderWidth.thin,
     borderColor: theme.colors.cyan,
   },
+  tierBadgeUnlocked: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 215, 0, 0.8)',
+  },
   tierText: {
     fontSize: 10,
     fontWeight: 'bold',
     color: theme.colors.cyan,
+  },
+  tierTextUnlocked: {
+    fontSize: 10,
+    fontWeight: '900',
+    color: '#FFD700',
+    textShadowColor: 'rgba(255, 140, 0, 0.8)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  xpBadge: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 215, 0, 0.8)',
+  },
+  xpBadgeText: {
+    fontSize: 10,
+    fontWeight: '900',
+    color: '#FFD700',
+    textShadowColor: 'rgba(255, 140, 0, 0.8)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+    letterSpacing: 0.3,
   },
   loadingContainer: {
     flex: 1,
