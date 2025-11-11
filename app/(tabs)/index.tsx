@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, AppState } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import theme from '@/theme/theme';
@@ -97,10 +97,22 @@ export default function HomeScreen() {
 
     start();
 
+    // Detectar cuando la app vuelve al primer plano (por si el usuario concedió permisos desde configuración)
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        console.log('[Home] App volvió al primer plano, verificando permisos...');
+        // Solo reintentar si no hay una suscripción activa
+        if (!unsubscribe) {
+          start();
+        }
+      }
+    });
+
     return () => {
       if (unsubscribe) {
         unsubscribe();
       }
+      subscription.remove();
     };
   }, []);
 

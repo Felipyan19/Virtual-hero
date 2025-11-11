@@ -354,6 +354,20 @@ export const ACHIEVEMENTS: Achievement[] = [
     rarity: 'common',
   },
   {
+    id: 'level_5',
+    heroName: 'Superhéroe en Entrenamiento',
+    category: 'xp_milestone',
+    tier: 3,
+    title: 'Superhéroe en Entrenamiento',
+    description: 'Alcanza el nivel 5 (800 XP total)',
+    requirement: {
+      type: 'total_xp',
+      value: 812,
+    },
+    xpReward: 200,
+    rarity: 'rare',
+  },
+  {
     id: 'xp_1000',
     heroName: 'Guerrero Ascendente',
     category: 'xp_milestone',
@@ -380,6 +394,20 @@ export const ACHIEVEMENTS: Achievement[] = [
     },
     xpReward: 200,
     rarity: 'rare',
+  },
+  {
+    id: 'level_10',
+    heroName: 'Superhéroe Legendario',
+    category: 'xp_milestone',
+    tier: 5,
+    title: 'Superhéroe Legendario',
+    description: 'Alcanza el nivel 10 (3000 XP total)',
+    requirement: {
+      type: 'total_xp',
+      value: 2998,
+    },
+    xpReward: 500,
+    rarity: 'epic',
   },
   {
     id: 'xp_5000',

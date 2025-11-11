@@ -8,6 +8,11 @@ import { useRouter } from 'expo-router';
 import theme from '@/theme/theme';
 import { PanelCard } from '@/components/PanelCard';
 import {
+  getPermissionStatus,
+  requestPedometerPermissions,
+  openAppSettings,
+} from '@/services/pedometerService';
+import {
   scheduleWaterReminders,
   cancelWaterReminders,
   scheduleExerciseReminders,
@@ -52,10 +57,21 @@ export default function NotificationsSettingsScreen() {
 
   const [loading, setLoading] = useState(true);
 
+  // Estado de permisos del podómetro
+  const [pedometerPermissionGranted, setPedometerPermissionGranted] = useState(false);
+  const [pedometerCanAskAgain, setPedometerCanAskAgain] = useState(true);
+
   // Cargar configuraciones guardadas
   useEffect(() => {
     loadNotificationSettings();
+    checkPedometerPermission();
   }, []);
+
+  const checkPedometerPermission = async () => {
+    const status = await getPermissionStatus();
+    setPedometerPermissionGranted(status.granted);
+    setPedometerCanAskAgain(status.canAskAgain);
+  };
 
   const loadNotificationSettings = async () => {
     try {
@@ -253,6 +269,43 @@ export default function NotificationsSettingsScreen() {
     );
   };
 
+  const handlePedometerPermission = async () => {
+    if (pedometerPermissionGranted) {
+      // Ya tiene permisos, mostrar mensaje
+      Alert.alert(
+        'Permisos activados',
+        'El acceso al sensor de actividad física ya está habilitado.'
+      );
+      return;
+    }
+
+    if (!pedometerCanAskAgain) {
+      // No puede volver a preguntar, abrir configuración
+      Alert.alert(
+        'Permisos requeridos',
+        'Los permisos fueron denegados previamente. Para habilitar el contador de pasos, debes activar el permiso manualmente desde la configuración de la aplicación.',
+        [
+          { text: 'Cancelar', style: 'cancel' },
+          {
+            text: 'Abrir Configuración',
+            onPress: () => openAppSettings(),
+          },
+        ]
+      );
+      return;
+    }
+
+    // Solicitar permisos
+    const granted = await requestPedometerPermissions(true);
+    if (granted) {
+      setPedometerPermissionGranted(true);
+      Alert.alert('¡Listo!', 'Ahora puedes usar el contador de pasos.');
+    } else {
+      // Actualizar el estado
+      await checkPedometerPermission();
+    }
+  };
+
   if (loading) {
     return (
       <View style={[theme.layout.container, styles.loadingContainer]}>
@@ -277,6 +330,48 @@ export default function NotificationsSettingsScreen() {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
+        {/* Permisos del Sensor de Actividad */}
+        <View style={styles.sectionHeader}>
+          <Text style={[theme.text.h3, styles.sectionTitle]}>Permisos</Text>
+        </View>
+
+        <PanelCard>
+          <TouchableOpacity
+            style={styles.permissionRow}
+            onPress={handlePedometerPermission}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingIcon}>🏃</Text>
+              <View style={styles.settingTextContainer}>
+                <Text style={[theme.text.h4, styles.settingTitle]}>Sensor de Actividad Física</Text>
+                <Text style={[theme.text.caption, styles.settingDescription]}>
+                  {pedometerPermissionGranted
+                    ? '✓ Activado - Contador de pasos funcionando'
+                    : pedometerCanAskAgain
+                      ? '✗ Desactivado - Toca para habilitar'
+                      : '✗ Denegado - Abre configuración para activar'}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={[
+                styles.permissionBadge,
+                pedometerPermissionGranted ? styles.permissionGranted : styles.permissionDenied,
+              ]}
+            >
+              <Text style={styles.permissionBadgeText}>
+                {pedometerPermissionGranted ? '✓' : '!'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </PanelCard>
+
+        {/* Recordatorios */}
+        <View style={styles.sectionHeader}>
+          <Text style={[theme.text.h3, styles.sectionTitle]}>Recordatorios</Text>
+        </View>
+
         {/* Botones rápidos */}
         <View style={styles.quickActions}>
           <TouchableOpacity
@@ -554,5 +649,37 @@ const styles = StyleSheet.create({
     flex: 1,
     color: theme.colors.textSecondary,
     lineHeight: 18,
+  },
+  sectionHeader: {
+    marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
+  },
+  sectionTitle: {
+    color: theme.colors.text,
+    fontWeight: '600',
+  },
+  permissionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 4,
+  },
+  permissionBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  permissionGranted: {
+    backgroundColor: theme.colors.success,
+  },
+  permissionDenied: {
+    backgroundColor: theme.colors.error,
+  },
+  permissionBadgeText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: theme.colors.ink,
   },
 });

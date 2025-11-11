@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { ACHIEVEMENTS, getAchievementsByCategory } from '@/data/achievements';
 import { loadUserStats } from '@/services/achievementService';
@@ -27,9 +28,12 @@ export default function AchievementsScreen() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadStats();
-  }, []);
+  // Recargar stats cada vez que la pantalla se enfoca
+  useFocusEffect(
+    React.useCallback(() => {
+      loadStats();
+    }, [])
+  );
 
   const loadStats = async () => {
     const stats = await loadUserStats();

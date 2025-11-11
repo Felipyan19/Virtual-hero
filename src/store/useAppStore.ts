@@ -262,6 +262,11 @@ export const useAppStore = create<AppState>()(
           useEventStore.getState().triggerAchievementUnlocked(unlockedAchievement);
         });
 
+        // También desbloquear en el nuevo sistema de achievements
+        import('../services/achievementService').then(({ unlockAchievement }) => {
+          unlockAchievement(achievementId);
+        });
+
         // Dar recompensa de XP
         get().addXP(achievement.xpReward, `Logro: ${achievement.title}`);
 

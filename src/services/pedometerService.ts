@@ -3,7 +3,7 @@
  */
 
 import { Pedometer } from 'expo-sensors';
-import { Platform } from 'react-native';
+import { Platform, Alert, Linking } from 'react-native';
 
 export interface PedometerResult {
   steps: number;
@@ -24,27 +24,104 @@ export const isPedometerAvailable = async (): Promise<boolean> => {
 };
 
 /**
- * Solicita permisos para acceder al pedómetro (solo Android)
- * En iOS los permisos se manejan automáticamente
+ * Verifica el estado actual de los permisos sin solicitarlos
  */
-export const requestPedometerPermissions = async (): Promise<boolean> => {
+export const getPermissionStatus = async (): Promise<{
+  granted: boolean;
+  canAskAgain: boolean;
+  status: string;
+}> => {
   try {
     if (Platform.OS === 'android') {
+      const result = await Pedometer.getPermissionsAsync();
+      console.log('[Pedometer] Estado actual de permisos:', result);
+      return {
+        granted: result.granted,
+        canAskAgain: result.canAskAgain ?? true,
+        status: result.status,
+      };
+    }
+    // En iOS siempre retorna true
+    return { granted: true, canAskAgain: true, status: 'granted' };
+  } catch (error) {
+    console.error('[Pedometer] Error verificando estado de permisos:', error);
+    return { granted: false, canAskAgain: false, status: 'undetermined' };
+  }
+};
+
+/**
+ * Abre la configuración de la aplicación en el sistema
+ */
+export const openAppSettings = async (): Promise<void> => {
+  try {
+    await Linking.openSettings();
+  } catch (error) {
+    console.error('[Pedometer] Error abriendo configuración:', error);
+    Alert.alert(
+      'Error',
+      'No se pudo abrir la configuración de la aplicación. Por favor, ábrela manualmente desde la configuración del sistema.'
+    );
+  }
+};
+
+/**
+ * Solicita permisos para acceder al pedómetro (solo Android)
+ * En iOS los permisos se manejan automáticamente
+ * @param showAlert - Si debe mostrar un diálogo cuando los permisos están denegados permanentemente
+ */
+export const requestPedometerPermissions = async (showAlert: boolean = true): Promise<boolean> => {
+  try {
+    if (Platform.OS === 'android') {
+      // Primero verificar el estado actual de los permisos
+      const currentStatus = await getPermissionStatus();
+
+      // Si ya están concedidos, retornar true
+      if (currentStatus.granted) {
+        console.log('[Pedometer] ✓ Permisos ya concedidos previamente');
+        return true;
+      }
+
+      // Si no puede volver a preguntar (denegado permanentemente)
+      if (!currentStatus.canAskAgain) {
+        console.log('[Pedometer] ✗ Permisos denegados permanentemente');
+
+        if (showAlert) {
+          Alert.alert(
+            'Permisos requeridos',
+            'Para contar tus pasos, Virtual Hero necesita acceso al sensor de actividad física.\n\nDebes habilitar el permiso manualmente desde la configuración de la aplicación.',
+            [
+              {
+                text: 'Cancelar',
+                style: 'cancel',
+              },
+              {
+                text: 'Abrir Configuración',
+                onPress: () => openAppSettings(),
+              },
+            ]
+          );
+        }
+
+        return false;
+      }
+
+      // Solicitar permisos si puede preguntar
       console.log('[Pedometer] Solicitando permisos de ACTIVITY_RECOGNITION...');
       const result = await Pedometer.requestPermissionsAsync();
       console.log('[Pedometer] Resultado de permisos:', result);
 
       if (result.granted) {
         console.log('[Pedometer] ✓ Permisos concedidos');
+        return true;
       } else {
         console.log('[Pedometer] ✗ Permisos denegados');
         if (result.canAskAgain !== undefined) {
           console.log('[Pedometer] ¿Puede volver a preguntar?', result.canAskAgain);
         }
+        return false;
       }
-
-      return result.granted;
     }
+
     // En iOS no necesita permisos explícitos
     console.log('[Pedometer] iOS - no requiere permisos explícitos');
     return true;

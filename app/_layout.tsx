@@ -86,6 +86,15 @@ export default function RootLayout() {
           console.warn('[App] Notificaciones no disponibles:', notifError);
         }
 
+        // Migrar logros del sistema antiguo al nuevo
+        try {
+          const { migrateOldAchievements } = await import('@/services/achievementMigration');
+          await migrateOldAchievements();
+          console.log('[App] Migración de logros completada');
+        } catch (migrationError) {
+          console.warn('[App] Error en migración de logros:', migrationError);
+        }
+
         console.log('[App] Inicialización completada');
         setIsReady(true);
       } catch (error) {
